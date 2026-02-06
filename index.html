@@ -3,14 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="Neeta Bhuwaji - Interior Architecture Portfolio">
-    <meta name="author" content="Neeta Bhuwaji">
-    <title>Neeta Bhuwaji - Interior Architecture Portfolio</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@100;300;400;500;700&display=swap" rel="stylesheet">
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.4.120/pdf.min.js"></script>
-    
+    <title>Portfolio - Flipbook</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/turn.js/3/turn.min.js"></script>
     <style>
         * {
             margin: 0;
@@ -19,138 +15,46 @@
         }
 
         body {
-            font-family: 'Roboto', sans-serif;
-            background: #f5f5f5;
+            font-family: 'Arial', sans-serif;
+            background: #2c3e50;
             min-height: 100vh;
             display: flex;
             flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            overflow-x: hidden;
         }
 
         .header {
-            background: white;
-            padding: 30px 20px;
+            color: white;
             text-align: center;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
-            position: sticky;
-            top: 0;
-            z-index: 100;
+            margin-bottom: 30px;
         }
 
         .header h1 {
-            font-size: 32px;
-            font-weight: 300;
-            letter-spacing: 8px;
-            color: #2c3e50;
-            margin-bottom: 5px;
+            font-size: 2.5em;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
         }
 
-        .header h2 {
-            font-size: 13px;
-            font-weight: 400;
-            letter-spacing: 3px;
-            color: #7f8c8d;
-            text-transform: uppercase;
-        }
-
-        .container {
-            flex: 1;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            padding: 40px 20px;
-        }
-
-        /* Page Viewer */
-        .page-viewer {
-            background: white;
-            border-radius: 8px;
-            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.15);
-            padding: 20px;
-            margin-bottom: 30px;
-            max-width: 1000px;
-            width: 100%;
-        }
-
-        .page-display {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            min-height: 600px;
-            background: #fafafa;
-            border-radius: 4px;
-        }
-
-        #pageCanvas {
-            max-width: 100%;
-            height: auto;
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
-        }
-
-        /* Navigation */
-        .navigation {
-            display: flex;
-            align-items: center;
-            gap: 40px;
-            margin-top: 30px;
-        }
-
-        .nav-btn {
-            background: white;
-            border: 1px solid #ddd;
-            color: #2c3e50;
-            padding: 14px 35px;
-            font-family: 'Roboto', sans-serif;
-            font-size: 14px;
-            font-weight: 400;
-            letter-spacing: 2px;
-            cursor: pointer;
-            transition: all 0.3s;
-            text-transform: uppercase;
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-        }
-
-        .nav-btn:hover:not(:disabled) {
-            background: #2c3e50;
+        .loading-screen {
+            text-align: center;
             color: white;
-            border-color: #2c3e50;
-            transform: translateY(-2px);
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
         }
 
-        .nav-btn:disabled {
-            opacity: 0.3;
-            cursor: not-allowed;
+        .loading-screen h2 {
+            margin-bottom: 20px;
         }
 
-        .page-info {
-            font-family: 'Roboto', sans-serif;
-            font-size: 15px;
-            font-weight: 300;
-            color: #2c3e50;
-            letter-spacing: 1px;
-            min-width: 120px;
-            text-align: center;
-        }
-
-        .page-number {
-            font-weight: 500;
-        }
-
-        /* Loading */
-        .loading {
-            text-align: center;
-            padding: 100px 20px;
-            color: #2c3e50;
-        }
-
-        .loading-spinner {
+        .spinner {
+            border: 4px solid rgba(255,255,255,0.3);
+            border-top: 4px solid white;
+            border-radius: 50%;
             width: 50px;
             height: 50px;
-            border: 3px solid #ecf0f1;
-            border-top: 3px solid #2c3e50;
-            border-radius: 50%;
             animation: spin 1s linear infinite;
-            margin: 0 auto 20px;
+            margin: 20px auto;
         }
 
         @keyframes spin {
@@ -158,253 +62,384 @@
             100% { transform: rotate(360deg); }
         }
 
-        .loading-text {
-            font-family: 'Roboto', sans-serif;
-            font-size: 16px;
-            font-weight: 300;
-            letter-spacing: 2px;
-            color: #7f8c8d;
+        .progress-text {
+            font-size: 18px;
+            margin-top: 10px;
         }
 
-        .instructions {
-            text-align: center;
-            margin-top: 20px;
-            font-family: 'Roboto', sans-serif;
-            font-size: 12px;
-            font-weight: 300;
-            letter-spacing: 1px;
-            color: #95a5a6;
+        .flipbook-container {
+            display: none;
+            position: relative;
+            perspective: 2000px;
         }
 
-        .footer {
+        #flipbook-wrapper {
+            margin: 0 auto;
+            position: relative;
+        }
+
+        #flipbook {
+            width: 1400px;
+            height: 700px;
+            margin: 0 auto;
+        }
+
+        #flipbook .page {
+            width: 700px;
+            height: 700px;
             background: white;
-            padding: 25px 20px;
-            text-align: center;
-            border-top: 1px solid #ecf0f1;
-            margin-top: auto;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 0 20px rgba(0,0,0,0.5);
+            overflow: hidden;
         }
 
-        .footer-content {
-            font-family: 'Roboto', sans-serif;
-            font-size: 13px;
-            font-weight: 300;
-            color: #7f8c8d;
-            letter-spacing: 1px;
+        #flipbook .page canvas {
+            max-width: 100%;
+            max-height: 100%;
+            object-fit: contain;
         }
 
-        .contact-links {
+        .controls {
             display: flex;
             justify-content: center;
+            align-items: center;
             gap: 30px;
-            margin-top: 15px;
-            flex-wrap: wrap;
+            margin-top: 40px;
         }
 
-        .contact-item {
-            font-family: 'Roboto', sans-serif;
-            font-size: 12px;
-            font-weight: 400;
-            color: #7f8c8d;
-            letter-spacing: 0.5px;
+        .control-btn {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 15px 35px;
+            border: none;
+            border-radius: 50px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: bold;
+            transition: all 0.3s;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
         }
 
-        .contact-item a {
-            color: #2c3e50;
-            text-decoration: none;
-            transition: color 0.3s;
+        .control-btn:hover:not(:disabled) {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(0,0,0,0.3);
         }
 
-        .contact-item a:hover {
-            color: #3498db;
+        .control-btn:disabled {
+            opacity: 0.4;
+            cursor: not-allowed;
         }
 
-        @media (max-width: 768px) {
-            .header h1 {
-                font-size: 24px;
-                letter-spacing: 4px;
+        .page-info {
+            text-align: center;
+            color: white;
+            font-size: 20px;
+            font-weight: bold;
+            background: rgba(0,0,0,0.3);
+            padding: 12px 30px;
+            border-radius: 30px;
+            backdrop-filter: blur(10px);
+        }
+
+        .fullscreen-btn {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: rgba(255,255,255,0.2);
+            color: white;
+            border: 2px solid white;
+            padding: 10px 20px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 14px;
+            backdrop-filter: blur(10px);
+            transition: all 0.3s;
+            z-index: 1000;
+        }
+
+        .fullscreen-btn:hover {
+            background: rgba(255,255,255,0.3);
+        }
+
+        /* Responsive Design */
+        @media (max-width: 1500px) {
+            #flipbook {
+                width: 1200px;
+                height: 600px;
             }
-
-            .header h2 {
-                font-size: 11px;
+            #flipbook .page {
+                width: 600px;
+                height: 600px;
             }
+        }
 
-            .page-display {
-                min-height: 400px;
+        @media (max-width: 1250px) {
+            #flipbook {
+                width: 1000px;
+                height: 500px;
             }
+            #flipbook .page {
+                width: 500px;
+                height: 500px;
+            }
+        }
 
-            .nav-btn {
+        @media (max-width: 1050px) {
+            #flipbook {
+                width: 800px;
+                height: 400px;
+            }
+            #flipbook .page {
+                width: 400px;
+                height: 400px;
+            }
+        }
+
+        @media (max-width: 850px) {
+            #flipbook {
+                width: 600px;
+                height: 300px;
+            }
+            #flipbook .page {
+                width: 300px;
+                height: 300px;
+            }
+            .control-btn {
                 padding: 12px 25px;
-                font-size: 12px;
+                font-size: 14px;
             }
+        }
 
-            .navigation {
-                gap: 20px;
+        @media (max-width: 650px) {
+            #flipbook {
+                width: 400px;
+                height: 200px;
             }
+            #flipbook .page {
+                width: 200px;
+                height: 200px;
+            }
+            .header h1 {
+                font-size: 1.8em;
+            }
+        }
 
-            .contact-links {
-                flex-direction: column;
-                gap: 10px;
-            }
+        /* Hide default turn.js page numbers */
+        .turn-page {
+            background: white;
         }
     </style>
 </head>
 <body>
+    <button class="fullscreen-btn" onclick="toggleFullscreen()" id="fullscreen-btn">
+        ⛶ Fullscreen
+    </button>
+
     <div class="header">
-        <h1>NEETA BHUWAJI</h1>
-        <h2>Interior Architecture Portfolio</h2>
+        <h1>📖 Portfolio</h1>
     </div>
 
-    <div class="container">
-        <div class="loading" id="loading">
-            <div class="loading-spinner"></div>
-            <p class="loading-text">LOADING PORTFOLIO</p>
-        </div>
-
-        <div class="page-viewer" id="pageViewer" style="display: none;">
-            <div class="page-display">
-                <canvas id="pageCanvas"></canvas>
-            </div>
-        </div>
-
-        <div class="navigation" id="navigation" style="display: none;">
-            <button class="nav-btn" id="prevBtn" disabled>Previous</button>
-            <div class="page-info">
-                <span class="page-number" id="pageInfo">Page 1 of 1</span>
-            </div>
-            <button class="nav-btn" id="nextBtn">Next</button>
-        </div>
-
-        <div class="instructions" id="instructions" style="display: none;">
-            Use arrow keys ← → to navigate
-        </div>
+    <div class="loading-screen" id="loading-screen">
+        <h2>Loading Portfolio...</h2>
+        <div class="spinner"></div>
+        <div class="progress-text" id="progress-text">Preparing pages...</div>
     </div>
 
-    <div class="footer">
-        <div class="footer-content">© 2024 Neeta Bhuwaji</div>
-        <div class="contact-links">
-            <div class="contact-item">
-                <a href="mailto:kbhuwajic@gmail.com">kbhuwajic@gmail.com</a>
+    <div class="flipbook-container" id="flipbook-container">
+        <div id="flipbook-wrapper">
+            <div id="flipbook"></div>
+        </div>
+        <div class="controls">
+            <button class="control-btn" id="prev-btn" onclick="previousPage()">
+                ← Previous
+            </button>
+            <div class="page-info" id="page-info">
+                Pages 1-2 of 10
             </div>
-            <div class="contact-item">+1 (520) 719-8954</div>
-            <div class="contact-item">Tempe, AZ 85281</div>
+            <button class="control-btn" id="next-btn" onclick="nextPage()">
+                Next →
+            </button>
         </div>
     </div>
 
     <script>
-        pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.4.120/pdf.worker.min.js';
+        // Configure PDF.js worker
+        pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
 
         let pdfDoc = null;
-        let currentPageNum = 1;
         let totalPages = 0;
-        const canvas = document.getElementById('pageCanvas');
-        const ctx = canvas.getContext('2d');
+        let currentPage = 0;
 
-        const loading = document.getElementById('loading');
-        const pageViewer = document.getElementById('pageViewer');
-        const navigation = document.getElementById('navigation');
-        const instructions = document.getElementById('instructions');
-        const prevBtn = document.getElementById('prevBtn');
-        const nextBtn = document.getElementById('nextBtn');
-        const pageInfo = document.getElementById('pageInfo');
+        // IMPORTANT: Replace 'issuu_portfolio_01.pdf' with your actual PDF filename
+        const PDF_FILE = 'issuu_portfolio_01.pdf';
 
-        const PDF_URL = 'issuu_portfolio_01.pdf';
-
-        window.addEventListener('load', () => {
-            loadPDF(PDF_URL);
+        // Load PDF on page load
+        window.addEventListener('load', async function() {
+            try {
+                await loadPDF();
+            } catch (error) {
+                console.error('Error loading PDF:', error);
+                document.getElementById('progress-text').textContent = 'Error loading PDF. Please check the file path.';
+            }
         });
 
-        async function loadPDF(url) {
+        async function loadPDF() {
+            const progressText = document.getElementById('progress-text');
+            
             try {
-                console.log('Loading PDF from:', url);
+                progressText.textContent = 'Loading PDF file...';
                 
-                const loadingTask = pdfjsLib.getDocument({
-                    url: url,
-                    verbosity: 0,
-                    cMapUrl: 'https://cdn.jsdelivr.net/npm/pdfjs-dist@3.4.120/cmaps/',
-                    cMapPacked: true
-                });
-                
+                // Load the PDF
+                const loadingTask = pdfjsLib.getDocument(PDF_FILE);
                 pdfDoc = await loadingTask.promise;
                 totalPages = pdfDoc.numPages;
                 
                 console.log('PDF loaded successfully. Total pages:', totalPages);
-                
-                loading.style.display = 'none';
-                pageViewer.style.display = 'block';
-                navigation.style.display = 'flex';
-                instructions.style.display = 'block';
-                
-                renderPage(1);
-                
+                progressText.textContent = `Rendering ${totalPages} pages...`;
+
+                // Render all pages
+                await renderAllPages();
+
+                // Initialize flipbook
+                progressText.textContent = 'Initializing flipbook...';
+                await initializeFlipbook();
+
+                // Hide loading screen and show flipbook
+                setTimeout(() => {
+                    document.getElementById('loading-screen').style.display = 'none';
+                    document.getElementById('flipbook-container').style.display = 'block';
+                }, 500);
+
             } catch (error) {
-                console.error('Error loading PDF:', error);
-                loading.innerHTML = `
-                    <div class="loading-text" style="color: #e74c3c;">
-                        Unable to load portfolio<br>
-                        <span style="font-size: 12px; margin-top: 10px; display: block;">
-                            ${error.message || 'Please try refreshing the page'}
-                        </span>
-                    </div>
-                `;
+                console.error('Error in loadPDF:', error);
+                progressText.textContent = `Error: ${error.message}. Make sure '${PDF_FILE}' is in the same folder as this HTML file.`;
             }
         }
 
-        async function renderPage(pageNum) {
-            try {
-                console.log('Rendering page:', pageNum);
-                
-                const page = await pdfDoc.getPage(pageNum);
-                
-                const desiredWidth = Math.min(window.innerWidth - 100, 900);
-                const viewport = page.getViewport({ scale: 1 });
-                const scale = desiredWidth / viewport.width;
-                const scaledViewport = page.getViewport({ scale: scale * 1.5 });
+        async function renderAllPages() {
+            const flipbook = document.getElementById('flipbook');
+            flipbook.innerHTML = '';
 
-                canvas.height = scaledViewport.height;
-                canvas.width = scaledViewport.width;
+            const progressText = document.getElementById('progress-text');
 
-                const renderContext = {
-                    canvasContext: ctx,
-                    viewport: scaledViewport,
-                    intent: 'display'
-                };
+            for (let pageNum = 1; pageNum <= totalPages; pageNum++) {
+                try {
+                    const page = await pdfDoc.getPage(pageNum);
+                    
+                    // Calculate scale to fit the page
+                    const viewport = page.getViewport({ scale: 2.0 });
 
-                await page.render(renderContext).promise;
-                
-                console.log('Page rendered successfully');
-                
-                currentPageNum = pageNum;
-                updateControls();
-                
-            } catch (error) {
-                console.error('Error rendering page:', error);
-                alert('Error displaying page. Please try again.');
+                    // Create page div
+                    const pageDiv = document.createElement('div');
+                    pageDiv.className = 'page';
+
+                    // Create canvas
+                    const canvas = document.createElement('canvas');
+                    const context = canvas.getContext('2d');
+
+                    canvas.width = viewport.width;
+                    canvas.height = viewport.height;
+
+                    // Render PDF page to canvas
+                    await page.render({
+                        canvasContext: context,
+                        viewport: viewport
+                    }).promise;
+
+                    pageDiv.appendChild(canvas);
+                    flipbook.appendChild(pageDiv);
+
+                    progressText.textContent = `Rendering page ${pageNum} of ${totalPages}...`;
+                    console.log(`Rendered page ${pageNum}`);
+
+                } catch (error) {
+                    console.error(`Error rendering page ${pageNum}:`, error);
+                }
             }
         }
 
-        function updateControls() {
-            prevBtn.disabled = currentPageNum <= 1;
-            nextBtn.disabled = currentPageNum >= totalPages;
-            pageInfo.textContent = `Page ${currentPageNum} of ${totalPages}`;
+        async function initializeFlipbook() {
+            const flipbook = $('#flipbook');
+            
+            // Initialize turn.js
+            flipbook.turn({
+                width: 1400,
+                height: 700,
+                autoCenter: true,
+                elevation: 50,
+                gradients: true,
+                acceleration: true,
+                duration: 1200,
+                display: 'double', // This creates the 2-page spread like Issuu
+                when: {
+                    turned: function(event, page) {
+                        updatePageInfo(page);
+                    }
+                }
+            });
+
+            updatePageInfo(1);
+            console.log('Flipbook initialized');
         }
 
-        prevBtn.addEventListener('click', () => {
-            if (currentPageNum > 1) {
-                renderPage(currentPageNum - 1);
+        function updatePageInfo(page) {
+            currentPage = page;
+            const pageInfo = document.getElementById('page-info');
+            const prevBtn = document.getElementById('prev-btn');
+            const nextBtn = document.getElementById('next-btn');
+
+            // Calculate which pages are showing (2-page spread)
+            let leftPage = page;
+            let rightPage = page + 1;
+
+            if (page === 1) {
+                pageInfo.textContent = `Page ${page} of ${totalPages}`;
+            } else if (rightPage > totalPages) {
+                pageInfo.textContent = `Page ${leftPage} of ${totalPages}`;
+            } else {
+                pageInfo.textContent = `Pages ${leftPage}-${rightPage} of ${totalPages}`;
+            }
+
+            // Update button states
+            prevBtn.disabled = (page === 1);
+            nextBtn.disabled = (page >= totalPages);
+        }
+
+        function previousPage() {
+            $('#flipbook').turn('previous');
+        }
+
+        function nextPage() {
+            $('#flipbook').turn('next');
+        }
+
+        // Keyboard navigation
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'ArrowLeft') {
+                previousPage();
+            } else if (e.key === 'ArrowRight') {
+                nextPage();
             }
         });
 
-        nextBtn.addEventListener('click', () => {
-            if (currentPageNum < totalPages) {
-                renderPage(currentPageNum + 1);
+        // Fullscreen toggle
+        function toggleFullscreen() {
+            if (!document.fullscreenElement) {
+                document.documentElement.requestFullscreen();
+                document.getElementById('fullscreen-btn').textContent = '✕ Exit Fullscreen';
+            } else {
+                document.exitFullscreen();
+                document.getElementById('fullscreen-btn').textContent = '⛶ Fullscreen';
             }
-        });
+        }
 
-        document.addEventListener('keydown', (e) => {
-            if (e.key === 'ArrowRight' && currentPageNum < totalPages) {
-                renderPage(currentPageNum + 1);
-            } else if (e.key === 'ArrowLeft' && currentPageNum > 1) {
-                renderPage(currentPageNum - 1);
+        // Handle fullscreen change
+        document.addEventListener('fullscreenchange', function() {
+            const btn = document.getElementById('fullscreen-btn');
+            if (!document.fullscreenElement) {
+                btn.textContent = '⛶ Fullscreen';
             }
         });
     </script>
