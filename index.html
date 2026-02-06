@@ -9,7 +9,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@100;300;400;500;700&display=swap" rel="stylesheet">
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.16.105/pdf.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.4.120/pdf.min.js"></script>
     
     <style>
         * {
@@ -24,10 +24,8 @@
             min-height: 100vh;
             display: flex;
             flex-direction: column;
-            overflow-x: hidden;
         }
 
-        /* Header */
         .header {
             background: white;
             padding: 30px 20px;
@@ -54,72 +52,41 @@
             text-transform: uppercase;
         }
 
-        /* Main Container */
         .container {
             flex: 1;
             display: flex;
             flex-direction: column;
             align-items: center;
             padding: 40px 20px;
-            background: #f5f5f5;
         }
 
-        /* Flipbook Wrapper */
-        .flipbook-wrapper {
-            perspective: 2000px;
-            margin-bottom: 40px;
-        }
-
-        .book {
-            position: relative;
-            width: 1200px;
-            height: 800px;
-            transform-style: preserve-3d;
-            margin: 0 auto;
-            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
-        }
-
-        .page-spread {
-            position: absolute;
-            width: 50%;
-            height: 100%;
-            left: 0;
-            top: 0;
-            transform-origin: right center;
-            transition: transform 1s cubic-bezier(0.645, 0.045, 0.355, 1);
-            transform-style: preserve-3d;
-        }
-
-        .page-spread.flipped {
-            transform: rotateY(-180deg);
-        }
-
-        .page-side {
-            position: absolute;
-            width: 100%;
-            height: 100%;
+        /* Page Viewer */
+        .page-viewer {
             background: white;
-            backface-visibility: hidden;
-            overflow: hidden;
-            box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
-        }
-
-        .page-front {
-            transform: rotateY(0deg);
-        }
-
-        .page-back {
-            transform: rotateY(180deg);
-        }
-
-        .page-canvas {
+            border-radius: 8px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.15);
+            padding: 20px;
+            margin-bottom: 30px;
+            max-width: 1000px;
             width: 100%;
-            height: 100%;
-            object-fit: contain;
-            display: block;
         }
 
-        /* Navigation Controls */
+        .page-display {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 600px;
+            background: #fafafa;
+            border-radius: 4px;
+        }
+
+        #pageCanvas {
+            max-width: 100%;
+            height: auto;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        /* Navigation */
         .navigation {
             display: flex;
             align-items: center;
@@ -153,7 +120,6 @@
         .nav-btn:disabled {
             opacity: 0.3;
             cursor: not-allowed;
-            background: #f5f5f5;
         }
 
         .page-info {
@@ -170,7 +136,7 @@
             font-weight: 500;
         }
 
-        /* Loading State */
+        /* Loading */
         .loading {
             text-align: center;
             padding: 100px 20px;
@@ -200,13 +166,6 @@
             color: #7f8c8d;
         }
 
-        .progress {
-            margin-top: 20px;
-            font-size: 14px;
-            color: #95a5a6;
-        }
-
-        /* Instructions */
         .instructions {
             text-align: center;
             margin-top: 20px;
@@ -217,7 +176,6 @@
             color: #95a5a6;
         }
 
-        /* Footer */
         .footer {
             background: white;
             padding: 25px 20px;
@@ -260,32 +218,7 @@
             color: #3498db;
         }
 
-        /* Responsive Design */
-        @media (max-width: 1300px) {
-            .book {
-                width: 1000px;
-                height: 667px;
-            }
-        }
-
-        @media (max-width: 1100px) {
-            .book {
-                width: 800px;
-                height: 533px;
-            }
-
-            .header h1 {
-                font-size: 28px;
-                letter-spacing: 6px;
-            }
-        }
-
-        @media (max-width: 900px) {
-            .book {
-                width: 90vw;
-                height: 60vw;
-            }
-
+        @media (max-width: 768px) {
             .header h1 {
                 font-size: 24px;
                 letter-spacing: 4px;
@@ -293,6 +226,10 @@
 
             .header h2 {
                 font-size: 11px;
+            }
+
+            .page-display {
+                min-height: 400px;
             }
 
             .nav-btn {
@@ -303,23 +240,6 @@
             .navigation {
                 gap: 20px;
             }
-        }
-
-        @media (max-width: 600px) {
-            .header h1 {
-                font-size: 20px;
-                letter-spacing: 3px;
-            }
-
-            .header h2 {
-                font-size: 10px;
-                letter-spacing: 2px;
-            }
-
-            .navigation {
-                flex-direction: column;
-                gap: 15px;
-            }
 
             .contact-links {
                 flex-direction: column;
@@ -329,27 +249,23 @@
     </style>
 </head>
 <body>
-    <!-- Header -->
     <div class="header">
         <h1>NEETA BHUWAJI</h1>
         <h2>Interior Architecture Portfolio</h2>
     </div>
 
-    <!-- Main Container -->
     <div class="container">
-        <!-- Loading State -->
         <div class="loading" id="loading">
             <div class="loading-spinner"></div>
             <p class="loading-text">LOADING PORTFOLIO</p>
-            <p class="progress" id="progress">Please wait...</p>
         </div>
 
-        <!-- Flipbook -->
-        <div class="flipbook-wrapper" id="flipbookWrapper" style="display: none;">
-            <div class="book" id="book"></div>
+        <div class="page-viewer" id="pageViewer" style="display: none;">
+            <div class="page-display">
+                <canvas id="pageCanvas"></canvas>
+            </div>
         </div>
 
-        <!-- Navigation -->
         <div class="navigation" id="navigation" style="display: none;">
             <button class="nav-btn" id="prevBtn" disabled>Previous</button>
             <div class="page-info">
@@ -363,7 +279,6 @@
         </div>
     </div>
 
-    <!-- Footer -->
     <div class="footer">
         <div class="footer-content">© 2024 Neeta Bhuwaji</div>
         <div class="contact-links">
@@ -376,179 +291,120 @@
     </div>
 
     <script>
-        // PDF.js setup
-        pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.16.105/pdf.worker.min.js';
+        pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.4.120/pdf.worker.min.js';
 
         let pdfDoc = null;
-        let currentPage = 0;
+        let currentPageNum = 1;
         let totalPages = 0;
-        let renderedPages = [];
+        const canvas = document.getElementById('pageCanvas');
+        const ctx = canvas.getContext('2d');
 
         const loading = document.getElementById('loading');
-        const progress = document.getElementById('progress');
-        const flipbookWrapper = document.getElementById('flipbookWrapper');
+        const pageViewer = document.getElementById('pageViewer');
         const navigation = document.getElementById('navigation');
         const instructions = document.getElementById('instructions');
-        const book = document.getElementById('book');
         const prevBtn = document.getElementById('prevBtn');
         const nextBtn = document.getElementById('nextBtn');
         const pageInfo = document.getElementById('pageInfo');
 
-        // PDF URL
         const PDF_URL = 'issuu_portfolio_01.pdf';
 
-        // Load PDF on page load
         window.addEventListener('load', () => {
             loadPDF(PDF_URL);
         });
 
         async function loadPDF(url) {
             try {
-                progress.textContent = 'Loading PDF...';
+                console.log('Loading PDF from:', url);
                 
-                const loadingTask = pdfjsLib.getDocument(url);
+                const loadingTask = pdfjsLib.getDocument({
+                    url: url,
+                    verbosity: 0,
+                    cMapUrl: 'https://cdn.jsdelivr.net/npm/pdfjs-dist@3.4.120/cmaps/',
+                    cMapPacked: true
+                });
+                
                 pdfDoc = await loadingTask.promise;
                 totalPages = pdfDoc.numPages;
                 
-                console.log('PDF loaded:', totalPages, 'pages');
-                progress.textContent = `Rendering ${totalPages} pages...`;
+                console.log('PDF loaded successfully. Total pages:', totalPages);
                 
-                await renderAllPages();
+                loading.style.display = 'none';
+                pageViewer.style.display = 'block';
+                navigation.style.display = 'flex';
+                instructions.style.display = 'block';
+                
+                renderPage(1);
                 
             } catch (error) {
                 console.error('Error loading PDF:', error);
                 loading.innerHTML = `
                     <div class="loading-text" style="color: #e74c3c;">
-                        Error loading portfolio<br>
+                        Unable to load portfolio<br>
                         <span style="font-size: 12px; margin-top: 10px; display: block;">
-                            ${error.message}
+                            ${error.message || 'Please try refreshing the page'}
                         </span>
                     </div>
                 `;
             }
         }
 
-        async function renderAllPages() {
-            renderedPages = [];
-
-            for (let pageNum = 1; pageNum <= totalPages; pageNum++) {
-                progress.textContent = `Rendering page ${pageNum} of ${totalPages}...`;
-                const canvas = await renderPage(pageNum);
-                renderedPages.push(canvas);
-            }
-
-            createFlipbook();
-        }
-
         async function renderPage(pageNum) {
-            const page = await pdfDoc.getPage(pageNum);
-            const scale = 2.0;
-            const viewport = page.getViewport({ scale: scale });
-            
-            const canvas = document.createElement('canvas');
-            const context = canvas.getContext('2d');
-            
-            canvas.height = viewport.height;
-            canvas.width = viewport.width;
-            canvas.className = 'page-canvas';
-
-            await page.render({
-                canvasContext: context,
-                viewport: viewport
-            }).promise;
-
-            return canvas;
-        }
-
-        function createFlipbook() {
-            book.innerHTML = '';
-            
-            const numSpreads = Math.ceil(renderedPages.length / 2);
-            
-            for (let i = 0; i < numSpreads; i++) {
-                const spread = document.createElement('div');
-                spread.className = 'page-spread';
-                spread.style.zIndex = numSpreads - i;
-
-                // Front side (right page)
-                const frontSide = document.createElement('div');
-                frontSide.className = 'page-side page-front';
+            try {
+                console.log('Rendering page:', pageNum);
                 
-                const frontPageIndex = i * 2;
-                if (frontPageIndex < renderedPages.length) {
-                    frontSide.appendChild(renderedPages[frontPageIndex].cloneNode(true));
-                }
+                const page = await pdfDoc.getPage(pageNum);
                 
-                spread.appendChild(frontSide);
+                const desiredWidth = Math.min(window.innerWidth - 100, 900);
+                const viewport = page.getViewport({ scale: 1 });
+                const scale = desiredWidth / viewport.width;
+                const scaledViewport = page.getViewport({ scale: scale * 1.5 });
 
-                // Back side (left page when flipped)
-                const backSide = document.createElement('div');
-                backSide.className = 'page-side page-back';
+                canvas.height = scaledViewport.height;
+                canvas.width = scaledViewport.width;
+
+                const renderContext = {
+                    canvasContext: ctx,
+                    viewport: scaledViewport,
+                    intent: 'display'
+                };
+
+                await page.render(renderContext).promise;
                 
-                const backPageIndex = i * 2 + 1;
-                if (backPageIndex < renderedPages.length) {
-                    backSide.appendChild(renderedPages[backPageIndex].cloneNode(true));
-                }
+                console.log('Page rendered successfully');
                 
-                spread.appendChild(backSide);
-                book.appendChild(spread);
+                currentPageNum = pageNum;
+                updateControls();
+                
+            } catch (error) {
+                console.error('Error rendering page:', error);
+                alert('Error displaying page. Please try again.');
             }
-
-            // Show flipbook
-            loading.style.display = 'none';
-            flipbookWrapper.style.display = 'block';
-            navigation.style.display = 'flex';
-            instructions.style.display = 'block';
-            
-            updateNavigation();
         }
 
-        function updateNavigation() {
-            const numSpreads = document.querySelectorAll('.page-spread').length;
-            prevBtn.disabled = currentPage === 0;
-            nextBtn.disabled = currentPage >= numSpreads - 1;
-            
-            const displayPage = Math.min(currentPage * 2 + 1, renderedPages.length);
-            pageInfo.textContent = `Page ${displayPage} of ${renderedPages.length}`;
+        function updateControls() {
+            prevBtn.disabled = currentPageNum <= 1;
+            nextBtn.disabled = currentPageNum >= totalPages;
+            pageInfo.textContent = `Page ${currentPageNum} of ${totalPages}`;
         }
 
-        function flipToPage(pageIndex) {
-            const spreads = document.querySelectorAll('.page-spread');
-            spreads.forEach((spread, index) => {
-                if (index < pageIndex) {
-                    spread.classList.add('flipped');
-                } else {
-                    spread.classList.remove('flipped');
-                }
-            });
-            updateNavigation();
-        }
-
-        // Navigation buttons
         prevBtn.addEventListener('click', () => {
-            if (currentPage > 0) {
-                currentPage--;
-                flipToPage(currentPage);
+            if (currentPageNum > 1) {
+                renderPage(currentPageNum - 1);
             }
         });
 
         nextBtn.addEventListener('click', () => {
-            const numSpreads = document.querySelectorAll('.page-spread').length;
-            if (currentPage < numSpreads - 1) {
-                currentPage++;
-                flipToPage(currentPage);
+            if (currentPageNum < totalPages) {
+                renderPage(currentPageNum + 1);
             }
         });
 
-        // Keyboard navigation
         document.addEventListener('keydown', (e) => {
-            const numSpreads = document.querySelectorAll('.page-spread').length;
-            if (e.key === 'ArrowRight' && currentPage < numSpreads - 1) {
-                currentPage++;
-                flipToPage(currentPage);
-            } else if (e.key === 'ArrowLeft' && currentPage > 0) {
-                currentPage--;
-                flipToPage(currentPage);
+            if (e.key === 'ArrowRight' && currentPageNum < totalPages) {
+                renderPage(currentPageNum + 1);
+            } else if (e.key === 'ArrowLeft' && currentPageNum > 1) {
+                renderPage(currentPageNum - 1);
             }
         });
     </script>
