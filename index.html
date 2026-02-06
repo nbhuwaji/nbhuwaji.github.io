@@ -3,10 +3,13 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="Neeta Bhuwaji - Interior Architecture Portfolio showcasing healthcare, cultural, civic, and mixed-use design projects">
-    <meta name="keywords" content="interior architecture, portfolio, design, Neeta Bhuwaji">
+    <meta name="description" content="Neeta Bhuwaji - Interior Architecture Portfolio">
     <meta name="author" content="Neeta Bhuwaji">
     <title>Neeta Bhuwaji - Interior Architecture Portfolio</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@100;300;400;500;700&display=swap" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.16.105/pdf.min.js"></script>
     
     <style>
         * {
@@ -16,169 +19,170 @@
         }
 
         body {
-            font-family: 'Helvetica Neue', Arial, sans-serif;
-            background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%);
+            font-family: 'Roboto', sans-serif;
+            background: #f5f5f5;
             min-height: 100vh;
             display: flex;
             flex-direction: column;
-            color: white;
+            overflow-x: hidden;
         }
 
         /* Header */
         .header {
+            background: white;
+            padding: 30px 20px;
             text-align: center;
-            padding: 40px 20px 20px;
-            background: rgba(0, 0, 0, 0.3);
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+            position: sticky;
+            top: 0;
+            z-index: 100;
         }
 
         .header h1 {
-            font-size: 48px;
+            font-size: 32px;
             font-weight: 300;
-            letter-spacing: 6px;
-            margin-bottom: 10px;
-            color: white;
+            letter-spacing: 8px;
+            color: #2c3e50;
+            margin-bottom: 5px;
         }
 
         .header h2 {
-            font-size: 20px;
-            font-weight: 300;
+            font-size: 13px;
+            font-weight: 400;
             letter-spacing: 3px;
-            color: #bdc3c7;
-            margin-bottom: 20px;
+            color: #7f8c8d;
+            text-transform: uppercase;
         }
 
-        .header-buttons {
-            display: flex;
-            justify-content: center;
-            gap: 20px;
-            margin-top: 20px;
-            flex-wrap: wrap;
-        }
-
-        .header-btn {
-            background: linear-gradient(135deg, #3498db, #2980b9);
-            color: white;
-            text-decoration: none;
-            padding: 12px 30px;
-            border-radius: 25px;
-            font-size: 16px;
-            font-weight: 600;
-            transition: all 0.3s;
-            display: inline-block;
-            letter-spacing: 1px;
-        }
-
-        .header-btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 6px 20px rgba(52, 152, 219, 0.4);
-        }
-
-        .header-btn.secondary {
-            background: linear-gradient(135deg, #95a5a6, #7f8c8d);
-        }
-
-        /* PDF Viewer Container */
-        .viewer-container {
+        /* Main Container */
+        .container {
             flex: 1;
             display: flex;
             flex-direction: column;
             align-items: center;
-            padding: 20px;
-            max-width: 1400px;
-            width: 100%;
-            margin: 0 auto;
+            padding: 40px 20px;
+            background: #f5f5f5;
         }
 
-        .pdf-wrapper {
-            width: 100%;
-            background: white;
-            border-radius: 10px;
-            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5);
-            overflow: hidden;
+        /* Flipbook Wrapper */
+        .flipbook-wrapper {
+            perspective: 2000px;
+            margin-bottom: 40px;
+        }
+
+        .book {
             position: relative;
+            width: 1200px;
+            height: 800px;
+            transform-style: preserve-3d;
+            margin: 0 auto;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
         }
 
-        #pdf-viewer {
+        .page-spread {
+            position: absolute;
+            width: 50%;
+            height: 100%;
+            left: 0;
+            top: 0;
+            transform-origin: right center;
+            transition: transform 1s cubic-bezier(0.645, 0.045, 0.355, 1);
+            transform-style: preserve-3d;
+        }
+
+        .page-spread.flipped {
+            transform: rotateY(-180deg);
+        }
+
+        .page-side {
+            position: absolute;
             width: 100%;
-            height: 80vh;
-            border: none;
-        }
-
-        /* Controls */
-        .controls {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            gap: 20px;
-            padding: 20px;
-            flex-wrap: wrap;
-        }
-
-        .control-btn {
+            height: 100%;
             background: white;
-            color: #3498db;
-            border: 2px solid #3498db;
-            padding: 12px 30px;
-            border-radius: 25px;
-            font-size: 16px;
-            font-weight: 600;
+            backface-visibility: hidden;
+            overflow: hidden;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+        }
+
+        .page-front {
+            transform: rotateY(0deg);
+        }
+
+        .page-back {
+            transform: rotateY(180deg);
+        }
+
+        .page-canvas {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+            display: block;
+        }
+
+        /* Navigation Controls */
+        .navigation {
+            display: flex;
+            align-items: center;
+            gap: 40px;
+            margin-top: 30px;
+        }
+
+        .nav-btn {
+            background: white;
+            border: 1px solid #ddd;
+            color: #2c3e50;
+            padding: 14px 35px;
+            font-family: 'Roboto', sans-serif;
+            font-size: 14px;
+            font-weight: 400;
+            letter-spacing: 2px;
             cursor: pointer;
             transition: all 0.3s;
             text-transform: uppercase;
-            letter-spacing: 1px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
         }
 
-        .control-btn:hover {
-            background: #3498db;
+        .nav-btn:hover:not(:disabled) {
+            background: #2c3e50;
             color: white;
+            border-color: #2c3e50;
             transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
         }
 
-        /* Footer */
-        .footer {
+        .nav-btn:disabled {
+            opacity: 0.3;
+            cursor: not-allowed;
+            background: #f5f5f5;
+        }
+
+        .page-info {
+            font-family: 'Roboto', sans-serif;
+            font-size: 15px;
+            font-weight: 300;
+            color: #2c3e50;
+            letter-spacing: 1px;
+            min-width: 120px;
             text-align: center;
-            padding: 30px 20px;
-            background: rgba(0, 0, 0, 0.3);
-            color: #bdc3c7;
-            font-size: 14px;
         }
 
-        .footer a {
-            color: #3498db;
-            text-decoration: none;
-        }
-
-        .footer a:hover {
-            text-decoration: underline;
-        }
-
-        .contact-info {
-            margin-top: 15px;
-            display: flex;
-            justify-content: center;
-            gap: 30px;
-            flex-wrap: wrap;
-        }
-
-        .contact-item {
-            display: flex;
-            align-items: center;
-            gap: 8px;
+        .page-number {
+            font-weight: 500;
         }
 
         /* Loading State */
         .loading {
-            display: none;
             text-align: center;
             padding: 100px 20px;
+            color: #2c3e50;
         }
 
-        .spinner {
-            border: 4px solid rgba(255, 255, 255, 0.3);
-            border-top: 4px solid white;
-            border-radius: 50%;
+        .loading-spinner {
             width: 50px;
             height: 50px;
+            border: 3px solid #ecf0f1;
+            border-top: 3px solid #2c3e50;
+            border-radius: 50%;
             animation: spin 1s linear infinite;
             margin: 0 auto 20px;
         }
@@ -188,27 +192,130 @@
             100% { transform: rotate(360deg); }
         }
 
-        /* Mobile Responsive */
-        @media (max-width: 768px) {
+        .loading-text {
+            font-family: 'Roboto', sans-serif;
+            font-size: 16px;
+            font-weight: 300;
+            letter-spacing: 2px;
+            color: #7f8c8d;
+        }
+
+        /* Instructions */
+        .instructions {
+            text-align: center;
+            margin-top: 20px;
+            font-family: 'Roboto', sans-serif;
+            font-size: 12px;
+            font-weight: 300;
+            letter-spacing: 1px;
+            color: #95a5a6;
+        }
+
+        /* Footer */
+        .footer {
+            background: white;
+            padding: 25px 20px;
+            text-align: center;
+            border-top: 1px solid #ecf0f1;
+            margin-top: auto;
+        }
+
+        .footer-content {
+            font-family: 'Roboto', sans-serif;
+            font-size: 13px;
+            font-weight: 300;
+            color: #7f8c8d;
+            letter-spacing: 1px;
+        }
+
+        .contact-links {
+            display: flex;
+            justify-content: center;
+            gap: 30px;
+            margin-top: 15px;
+            flex-wrap: wrap;
+        }
+
+        .contact-item {
+            font-family: 'Roboto', sans-serif;
+            font-size: 12px;
+            font-weight: 400;
+            color: #7f8c8d;
+            letter-spacing: 0.5px;
+        }
+
+        .contact-item a {
+            color: #2c3e50;
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+
+        .contact-item a:hover {
+            color: #3498db;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 1300px) {
+            .book {
+                width: 1000px;
+                height: 667px;
+            }
+        }
+
+        @media (max-width: 1100px) {
+            .book {
+                width: 800px;
+                height: 533px;
+            }
+
             .header h1 {
-                font-size: 32px;
+                font-size: 28px;
+                letter-spacing: 6px;
+            }
+        }
+
+        @media (max-width: 900px) {
+            .book {
+                width: 90vw;
+                height: 60vw;
+            }
+
+            .header h1 {
+                font-size: 24px;
+                letter-spacing: 4px;
+            }
+
+            .header h2 {
+                font-size: 11px;
+            }
+
+            .nav-btn {
+                padding: 12px 25px;
+                font-size: 12px;
+            }
+
+            .navigation {
+                gap: 20px;
+            }
+        }
+
+        @media (max-width: 600px) {
+            .header h1 {
+                font-size: 20px;
                 letter-spacing: 3px;
             }
 
             .header h2 {
-                font-size: 16px;
+                font-size: 10px;
+                letter-spacing: 2px;
             }
 
-            #pdf-viewer {
-                height: 60vh;
-            }
-
-            .header-buttons {
+            .navigation {
                 flex-direction: column;
-                align-items: center;
+                gap: 15px;
             }
 
-            .contact-info {
+            .contact-links {
                 flex-direction: column;
                 gap: 10px;
             }
@@ -219,93 +326,218 @@
     <!-- Header -->
     <div class="header">
         <h1>NEETA BHUWAJI</h1>
-        <h2>INTERIOR ARCHITECTURE PORTFOLIO</h2>
-        <div class="header-buttons">
-            <a href="issuu_portfolio_01.pdf" class="header-btn" download>📥 Download PDF</a>
-            <a href="issuu_portfolio_01.pdf" class="header-btn secondary" target="_blank">🔗 Open in New Tab</a>
-        </div>
+        <h2>Interior Architecture Portfolio</h2>
     </div>
 
-    <!-- Loading State -->
-    <div class="loading" id="loading">
-        <div class="spinner"></div>
-        <p>Loading portfolio...</p>
-    </div>
-
-    <!-- PDF Viewer -->
-    <div class="viewer-container">
-        <div class="pdf-wrapper">
-            <iframe 
-                id="pdf-viewer"
-                src="issuu_portfolio_01.pdf#view=FitH&toolbar=1&navpanes=1"
-                type="application/pdf">
-                <p>Your browser doesn't support PDF viewing. 
-                    <a href="issuu_portfolio_01.pdf" style="color: #3498db;">Download the PDF</a> instead.
-                </p>
-            </iframe>
+    <!-- Main Container -->
+    <div class="container">
+        <!-- Loading State -->
+        <div class="loading" id="loading">
+            <div class="loading-spinner"></div>
+            <p class="loading-text">LOADING PORTFOLIO</p>
         </div>
 
-        <div class="controls">
-            <button class="control-btn" onclick="toggleFullscreen()">⛶ Fullscreen</button>
-            <button class="control-btn" onclick="window.open('issuu_portfolio_01.pdf', '_blank')">🔗 New Window</button>
+        <!-- Flipbook -->
+        <div class="flipbook-wrapper" id="flipbookWrapper" style="display: none;">
+            <div class="book" id="book"></div>
+        </div>
+
+        <!-- Navigation -->
+        <div class="navigation" id="navigation" style="display: none;">
+            <button class="nav-btn" id="prevBtn" disabled>Previous</button>
+            <div class="page-info">
+                <span class="page-number" id="pageInfo">Page 1 of 1</span>
+            </div>
+            <button class="nav-btn" id="nextBtn">Next</button>
+        </div>
+
+        <div class="instructions" id="instructions" style="display: none;">
+            Use arrow keys ← → to navigate
         </div>
     </div>
 
     <!-- Footer -->
     <div class="footer">
-        <p><strong>Neeta Bhuwaji</strong> | Interior Architecture</p>
-        <div class="contact-info">
+        <div class="footer-content">© 2024 Neeta Bhuwaji</div>
+        <div class="contact-links">
             <div class="contact-item">
-                <span>📧</span>
                 <a href="mailto:kbhuwajic@gmail.com">kbhuwajic@gmail.com</a>
             </div>
-            <div class="contact-item">
-                <span>📱</span>
-                <span>+1 (520) 719-8954</span>
-            </div>
-            <div class="contact-item">
-                <span>📍</span>
-                <span>Tempe, AZ 85281</span>
-            </div>
+            <div class="contact-item">+1 (520) 719-8954</div>
+            <div class="contact-item">Tempe, AZ 85281</div>
         </div>
-        <p style="margin-top: 20px; font-size: 12px; color: #7f8c8d;">
-            © 2024 Neeta Bhuwaji. All rights reserved.
-        </p>
     </div>
 
     <script>
-        // Fullscreen function
-        function toggleFullscreen() {
-            const viewer = document.getElementById('pdf-viewer');
-            if (!document.fullscreenElement) {
-                if (viewer.requestFullscreen) {
-                    viewer.requestFullscreen();
-                } else if (viewer.webkitRequestFullscreen) {
-                    viewer.webkitRequestFullscreen();
-                } else if (viewer.msRequestFullscreen) {
-                    viewer.msRequestFullscreen();
-                }
-            } else {
-                if (document.exitFullscreen) {
-                    document.exitFullscreen();
-                }
+        // PDF.js setup
+        pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.16.105/pdf.worker.min.js';
+
+        let pdfDoc = null;
+        let currentPage = 0;
+        let totalPages = 0;
+        let renderedPages = [];
+
+        const loading = document.getElementById('loading');
+        const flipbookWrapper = document.getElementById('flipbookWrapper');
+        const navigation = document.getElementById('navigation');
+        const instructions = document.getElementById('instructions');
+        const book = document.getElementById('book');
+        const prevBtn = document.getElementById('prevBtn');
+        const nextBtn = document.getElementById('nextBtn');
+        const pageInfo = document.getElementById('pageInfo');
+
+        // PDF URL - change this to your PDF filename
+        const PDF_URL = 'issuu_portfolio_01.pdf';
+
+        // Load PDF on page load
+        window.addEventListener('load', () => {
+            loadPDF(PDF_URL);
+        });
+
+        async function loadPDF(url) {
+            try {
+                const loadingTask = pdfjsLib.getDocument(url);
+                pdfDoc = await loadingTask.promise;
+                totalPages = pdfDoc.numPages;
+                
+                console.log('PDF loaded:', totalPages, 'pages');
+                
+                await renderAllPages();
+                
+            } catch (error) {
+                console.error('Error loading PDF:', error);
+                loading.innerHTML = `
+                    <div class="loading-text" style="color: #e74c3c;">
+                        Error loading portfolio<br>
+                        <span style="font-size: 12px; margin-top: 10px; display: block;">
+                            Please ensure issuu_portfolio_01.pdf is in the same folder
+                        </span>
+                    </div>
+                `;
             }
         }
 
-        // Check if PDF loads successfully
-        const iframe = document.getElementById('pdf-viewer');
-        const loading = document.getElementById('loading');
-        
-        iframe.onload = function() {
-            loading.style.display = 'none';
-        };
+        async function renderAllPages() {
+            renderedPages = [];
 
-        // Show loading initially
-        window.addEventListener('load', function() {
-            // Hide loading after 2 seconds if iframe hasn't loaded
-            setTimeout(function() {
-                loading.style.display = 'none';
-            }, 2000);
+            for (let pageNum = 1; pageNum <= totalPages; pageNum++) {
+                const canvas = await renderPage(pageNum);
+                renderedPages.push(canvas);
+            }
+
+            createFlipbook();
+        }
+
+        async function renderPage(pageNum) {
+            const page = await pdfDoc.getPage(pageNum);
+            const scale = 2.0;
+            const viewport = page.getViewport({ scale: scale });
+            
+            const canvas = document.createElement('canvas');
+            const context = canvas.getContext('2d');
+            
+            canvas.height = viewport.height;
+            canvas.width = viewport.width;
+            canvas.className = 'page-canvas';
+
+            await page.render({
+                canvasContext: context,
+                viewport: viewport
+            }).promise;
+
+            return canvas;
+        }
+
+        function createFlipbook() {
+            book.innerHTML = '';
+            
+            const numSpreads = Math.ceil(renderedPages.length / 2);
+            
+            for (let i = 0; i < numSpreads; i++) {
+                const spread = document.createElement('div');
+                spread.className = 'page-spread';
+                spread.style.zIndex = numSpreads - i;
+
+                // Front side (right page)
+                const frontSide = document.createElement('div');
+                frontSide.className = 'page-side page-front';
+                
+                const frontPageIndex = i * 2;
+                if (frontPageIndex < renderedPages.length) {
+                    frontSide.appendChild(renderedPages[frontPageIndex].cloneNode(true));
+                }
+                
+                spread.appendChild(frontSide);
+
+                // Back side (left page when flipped)
+                const backSide = document.createElement('div');
+                backSide.className = 'page-side page-back';
+                
+                const backPageIndex = i * 2 + 1;
+                if (backPageIndex < renderedPages.length) {
+                    backSide.appendChild(renderedPages[backPageIndex].cloneNode(true));
+                }
+                
+                spread.appendChild(backSide);
+                book.appendChild(spread);
+            }
+
+            // Show flipbook
+            loading.style.display = 'none';
+            flipbookWrapper.style.display = 'block';
+            navigation.style.display = 'flex';
+            instructions.style.display = 'block';
+            
+            updateNavigation();
+        }
+
+        function updateNavigation() {
+            const numSpreads = document.querySelectorAll('.page-spread').length;
+            prevBtn.disabled = currentPage === 0;
+            nextBtn.disabled = currentPage >= numSpreads - 1;
+            
+            const displayPage = Math.min(currentPage * 2 + 1, renderedPages.length);
+            pageInfo.textContent = `Page ${displayPage} of ${renderedPages.length}`;
+        }
+
+        function flipToPage(pageIndex) {
+            const spreads = document.querySelectorAll('.page-spread');
+            spreads.forEach((spread, index) => {
+                if (index < pageIndex) {
+                    spread.classList.add('flipped');
+                } else {
+                    spread.classList.remove('flipped');
+                }
+            });
+            updateNavigation();
+        }
+
+        // Navigation buttons
+        prevBtn.addEventListener('click', () => {
+            if (currentPage > 0) {
+                currentPage--;
+                flipToPage(currentPage);
+            }
+        });
+
+        nextBtn.addEventListener('click', () => {
+            const numSpreads = document.querySelectorAll('.page-spread').length;
+            if (currentPage < numSpreads - 1) {
+                currentPage++;
+                flipToPage(currentPage);
+            }
+        });
+
+        // Keyboard navigation
+        document.addEventListener('keydown', (e) => {
+            const numSpreads = document.querySelectorAll('.page-spread').length;
+            if (e.key === 'ArrowRight' && currentPage < numSpreads - 1) {
+                currentPage++;
+                flipToPage(currentPage);
+            } else if (e.key === 'ArrowLeft' && currentPage > 0) {
+                currentPage--;
+                flipToPage(currentPage);
+            }
         });
     </script>
 </body>
