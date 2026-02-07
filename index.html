@@ -19,12 +19,9 @@
         body {
             font-family: 'Roboto', sans-serif;
             background: #f5f5f5;
-            min-height: 100vh;
+            height: 100vh;
             display: flex;
-            margin: 0;
-            padding: 0;
-            overflow-x: hidden;
-            overflow-y: auto;
+            overflow: hidden; /* Prevents body scroll issues */
         }
 
         .sidebar {
@@ -32,7 +29,7 @@
             min-width: 200px;
             max-width: 280px;
             background: #f9c896;
-            min-height: 100vh;
+            height: 100vh;
             position: fixed;
             left: 0;
             top: 0;
@@ -76,19 +73,12 @@
             align-items: center;
             justify-content: center;
             position: relative;
-            padding: 1.5vw;
+            padding: 20px;
         }
 
         .loading-screen {
             text-align: center;
             color: #333;
-        }
-
-        .loading-screen h2 {
-            margin-bottom: 20px;
-            font-weight: 400;
-            letter-spacing: 2px;
-            color: #000;
         }
 
         .spinner {
@@ -106,33 +96,22 @@
             100% { transform: rotate(360deg); }
         }
 
-        .progress-text {
-            font-size: 14px;
-            margin-top: 10px;
-            font-weight: 300;
-            letter-spacing: 1px;
-            color: #666;
-        }
-
         .flipbook-wrapper {
             display: none;
             flex-direction: column;
             align-items: center;
             justify-content: center;
-            max-height: calc(100vh - 10vw);
             width: 100%;
+            height: 100%;
         }
 
         #flipbook {
-            width: min(75vw, 1200px);
-            height: calc(min(75vw, 1200px) * 0.583);
+            margin: 0 auto;
+            box-shadow: 0 0 50px rgba(0,0,0,0.2);
         }
 
         #flipbook .page {
-            width: calc(min(75vw, 1200px) / 2);
-            height: calc(min(75vw, 1200px) * 0.583);
             background: white;
-            box-shadow: 0 0 2vw rgba(0,0,0,0.7);
             display: flex;
             align-items: center;
             justify-content: center;
@@ -150,23 +129,21 @@
             display: flex;
             justify-content: center;
             align-items: center;
-            gap: 2vw;
-            margin-top: 2vw;
+            gap: 20px;
+            margin-top: 30px; /* Space for the buttons */
+            z-index: 101;
         }
 
         .control-btn {
             background: #fff;
             color: #000;
-            padding: clamp(8px, 0.8vw, 12px) clamp(20px, 2vw, 30px);
+            padding: 10px 25px;
             border: 2px solid #000;
-            border-radius: 2px;
             cursor: pointer;
-            font-size: clamp(11px, 0.85vw, 13px);
-            font-weight: 500;
-            letter-spacing: 1px;
-            transition: all 0.3s;
-            font-family: 'Roboto', sans-serif;
+            font-size: 12px;
+            font-weight: 700;
             text-transform: uppercase;
+            transition: all 0.3s;
         }
 
         .control-btn:hover:not(:disabled) {
@@ -177,19 +154,12 @@
         .control-btn:disabled {
             opacity: 0.3;
             cursor: not-allowed;
-            border-color: #ccc;
-            color: #ccc;
         }
 
         .page-info {
-            text-align: center;
-            color: #000;
-            font-size: clamp(12px, 0.9vw, 14px);
-            font-weight: 400;
-            letter-spacing: 1px;
+            font-size: 13px;
             background: #fff;
-            padding: clamp(8px, 0.8vw, 12px) clamp(15px, 1.5vw, 25px);
-            border-radius: 2px;
+            padding: 8px 20px;
             border: 2px solid #000;
         }
 
@@ -198,98 +168,32 @@
             bottom: 2.5vw;
             right: 2.5vw;
             background: #fff;
-            color: #000;
             border: 2px solid #000;
-            padding: clamp(8px, 0.65vw, 10px) clamp(15px, 1.3vw, 20px);
-            border-radius: 2px;
+            padding: 10px 15px;
             cursor: pointer;
-            font-size: clamp(10px, 0.75vw, 12px);
-            font-family: 'Roboto', sans-serif;
-            letter-spacing: 1px;
-            transition: all 0.3s;
             z-index: 100;
             text-transform: uppercase;
-            font-weight: 500;
+            font-weight: 700;
+            font-size: 11px;
         }
 
-        .fullscreen-btn:hover {
-            background: #000;
-            color: #fff;
-        }
-
-        @media (max-width: 1200px) {
-            #flipbook {
-                width: min(80vw, 1000px);
-                height: calc(min(80vw, 1000px) * 0.583);
-            }
-            #flipbook .page {
-                width: calc(min(80vw, 1000px) / 2);
-                height: calc(min(80vw, 1000px) * 0.583);
-            }
-        }
-
-        @media (max-width: 1050px) {
-            #flipbook {
-                width: min(85vw, 800px);
-                height: calc(min(85vw, 800px) * 0.583);
-            }
-            #flipbook .page {
-                width: calc(min(85vw, 800px) / 2);
-                height: calc(min(85vw, 800px) * 0.583);
-            }
-        }
-
+        /* Mobile Adjustments */
         @media (max-width: 900px) {
-            .sidebar {
-                width: 100%;
-                min-width: 100%;
-                max-width: 100%;
-                min-height: auto;
-                position: relative;
-                padding: 20px;
-                flex-direction: row;
-                justify-content: space-between;
-                align-items: center;
-            }
-            .main-content {
-                margin-left: 0;
-                width: 100%;
-                height: calc(100vh - 80px);
-            }
-            .year-display { 
-                position: static; 
-                margin-left: auto; 
-            }
-            #flipbook {
-                width: 90vw;
-                height: calc(90vw * 0.583);
-            }
-            #flipbook .page {
-                width: calc(90vw / 2);
-                height: calc(90vw * 0.583);
-            }
+            body { flex-direction: column; overflow-y: auto; }
+            .sidebar { width: 100%; max-width: 100%; height: auto; position: relative; flex-direction: row; padding: 15px; }
+            .main-content { margin-left: 0; width: 100%; height: auto; min-height: 80vh; }
+            .year-display { display: none; }
         }
-
-        @media (max-width: 650px) {
-            #flipbook {
-                width: 95vw;
-                height: calc(95vw * 0.583);
-            }
-            #flipbook .page {
-                width: calc(95vw / 2);
-                height: calc(95vw * 0.583);
-            }
-        }
-
     </style>
 </head>
 <body>
+
     <div class="sidebar">
         <div class="sidebar-top">
             <h1>Neeta Bhuwaji</h1>
         </div>
         <div class="sidebar-bottom">
-            <a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="abc0c9c3dedccac1c2c8ebccc6cac2c785c8c4c6">[email&#160;protected]</a> | +520-7198954
+            neeta@example.com | +520-7198954
         </div>
     </div>
 
@@ -297,16 +201,15 @@
 
     <div class="main-content">
         <div class="loading-screen" id="loading-screen">
-            <h2>Loading Portfolio...</h2>
             <div class="spinner"></div>
-            <div class="progress-text" id="progress-text">Initializing...</div>
+            <div id="progress-text">Loading Portfolio...</div>
         </div>
 
         <div class="flipbook-wrapper" id="flipbook-wrapper">
             <div id="flipbook"></div>
             <div class="controls">
-                <button class="control-btn" id="prev-btn">← Previous</button>
-                <div class="page-info" id="page-info">Pages 1-2</div>
+                <button class="control-btn" id="prev-btn">← Prev</button>
+                <div class="page-info" id="page-info">Page 1</div>
                 <button class="control-btn" id="next-btn">Next →</button>
             </div>
         </div>
@@ -314,97 +217,81 @@
 
     <button class="fullscreen-btn" id="fullscreen-btn">Fullscreen</button>
 
-    <script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
-        // Total number of pages - UPDATE THIS to match your actual page count
+    <script>
         const TOTAL_PAGES = 28;
-        
+        const ASPECT_RATIO = 0.583; // Height / Width
+
+        function calculateSize() {
+            // Calculate width based on available space (75% of main content area)
+            let width = Math.min(window.innerWidth * 0.7, 1100);
+            let height = width * ASPECT_RATIO;
+
+            // CRITICAL FIX: If height is too big for the screen, shrink the width to fit
+            const maxHeight = window.innerHeight - 200; // 200px buffer for controls/header
+            if (height > maxHeight) {
+                height = maxHeight;
+                width = height / ASPECT_RATIO;
+            }
+
+            return { width, height };
+        }
+
         window.addEventListener('load', function() {
-            console.log('Starting portfolio load...');
-            setTimeout(initPortfolio, 100);
+            initPortfolio();
         });
 
         function initPortfolio() {
             const flipbook = document.getElementById('flipbook');
-            const progressText = document.getElementById('progress-text');
             
-            console.log('Creating pages...');
-            progressText.textContent = 'Creating pages...';
-            
-            // Create all pages immediately
+            // Create pages
             for (let i = 1; i <= TOTAL_PAGES; i++) {
                 const pageDiv = document.createElement('div');
                 pageDiv.className = 'page';
-                
                 const img = document.createElement('img');
                 const pageNum = String(i).padStart(2, '0');
                 img.src = `pages/pages_${pageNum}.jpg`;
-                img.alt = `Page ${i}`;
-                
-                img.onerror = function() {
-                    console.error(`Failed to load: pages/pages_${pageNum}.jpg`);
-                    this.style.display = 'none';
-                };
-                
-                img.onload = function() {
-                    console.log(`Loaded page ${i}`);
-                };
-                
                 pageDiv.appendChild(img);
                 flipbook.appendChild(pageDiv);
             }
             
-            // Initialize flipbook immediately (don't wait for images)
-            console.log('Initializing flipbook...');
-            progressText.textContent = 'Starting flipbook...';
-            
+            const size = calculateSize();
+
             setTimeout(function() {
-                // Calculate responsive dimensions
-                const vw = Math.min(window.innerWidth * 0.75, 1200);
-                const vh = vw * 0.583;
-                
                 $('#flipbook').turn({
-                    width: vw,
-                    height: vh,
+                    width: size.width,
+                    height: size.height,
                     autoCenter: true,
                     display: 'double',
                     acceleration: true,
                     gradients: true,
                     elevation: 50,
-                    duration: 1200
+                    duration: 1000
                 }).bind('turned', function(e, page) {
                     updatePage(page);
                 });
                 
-                console.log('Flipbook ready!');
                 document.getElementById('loading-screen').style.display = 'none';
                 document.getElementById('flipbook-wrapper').style.display = 'flex';
                 updatePage(1);
-                
-                // Responsive resize handler
-                window.addEventListener('resize', function() {
-                    const newVw = Math.min(window.innerWidth * 0.75, 1200);
-                    const newVh = newVw * 0.583;
-                    $('#flipbook').turn('size', newVw, newVh);
-                });
             }, 500);
         }
 
         function updatePage(page) {
             const info = document.getElementById('page-info');
-            const prev = document.getElementById('prev-btn');
-            const next = document.getElementById('next-btn');
+            if (page === 1) info.textContent = `Page ${page}`;
+            else if (page >= TOTAL_PAGES) info.textContent = `Page ${TOTAL_PAGES}`;
+            else info.textContent = `Pages ${page}-${page + 1}`;
             
-            if (page === 1) {
-                info.textContent = `Page ${page}`;
-            } else if (page + 1 > TOTAL_PAGES) {
-                info.textContent = `Page ${page}`;
-            } else {
-                info.textContent = `Pages ${page}-${page + 1}`;
-            }
-            
-            prev.disabled = (page === 1);
-            next.disabled = (page >= TOTAL_PAGES);
+            document.getElementById('prev-btn').disabled = (page === 1);
+            document.getElementById('next-btn').disabled = (page >= TOTAL_PAGES);
         }
+
+        window.addEventListener('resize', function() {
+            const size = calculateSize();
+            if ($('#flipbook').turn('is')) {
+                $('#flipbook').turn('size', size.width, size.height);
+            }
+        });
 
         document.getElementById('prev-btn').onclick = () => $('#flipbook').turn('previous');
         document.getElementById('next-btn').onclick = () => $('#flipbook').turn('next');
@@ -423,5 +310,6 @@
                 this.textContent = 'Fullscreen';
             }
         };
-
-        document.addEventListener()
+    </script>
+</body>
+</html>
