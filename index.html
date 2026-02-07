@@ -82,11 +82,56 @@
             flex-direction: column;
             align-items: center;
             justify-content: center;
-            padding: 40px;
+            padding: 60px 40px;
             position: relative;
         }
 
-        /* Loading Screen */
+        /* Flipbook Container */
+        .flipbook-container {
+            display: none;
+            position: relative;
+            perspective: 2000px;
+            width: 100%;
+            max-width: 1600px;
+            margin: 0 auto;
+        }
+
+        #flipbook-wrapper {
+            margin: 0 auto;
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        #flipbook {
+            width: 1440px;
+            height: 840px;
+            margin: 0 auto;
+        }
+
+        #flipbook .page {
+            width: 720px;
+            height: 840px;
+            background: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 0 30px rgba(0,0,0,0.7);
+            overflow: hidden;
+        }
+
+        #flipbook .page canvas {
+            display: block;
+            width: 100% !important;
+            height: 100% !important;
+            object-fit: contain;
+        }
+
+        /* Hide any text overlays on canvas */
+        #flipbook .page * {
+            pointer-events: none;
+        }
         .loading-screen {
             text-align: center;
             color: #333;
@@ -122,11 +167,14 @@
             color: #666;
         }
 
-        /* Flipbook Container */
-        .flipbook-container {
-            display: none;
-            position: relative;
-            perspective: 2000px;
+        /* Loading Screen */
+        .loading-screen {
+            text-align: center;
+            color: #333;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
         }
 
         #flipbook-wrapper {
@@ -162,6 +210,8 @@
             align-items: center;
             gap: 30px;
             margin-top: 40px;
+            position: relative;
+            z-index: 10;
         }
 
         .control-btn {
@@ -237,6 +287,9 @@
                 width: 600px;
                 height: 700px;
             }
+            .main-content {
+                padding: 40px 30px;
+            }
         }
 
         @media (max-width: 1250px) {
@@ -255,6 +308,7 @@
             .main-content {
                 margin-left: 220px;
                 width: calc(100% - 220px);
+                padding: 40px 20px;
             }
             .sidebar-top h1 {
                 font-size: 24px;
@@ -269,6 +323,9 @@
             #flipbook .page {
                 width: 400px;
                 height: 466px;
+            }
+            .main-content {
+                padding: 30px 20px;
             }
         }
 
@@ -286,6 +343,7 @@
                 margin-left: 0;
                 width: 100%;
                 padding: 20px;
+                min-height: calc(100vh - 80px);
             }
             .year-display {
                 position: static;
@@ -460,9 +518,6 @@
 
                     canvas.width = scaledViewport.width;
                     canvas.height = scaledViewport.height;
-                    canvas.style.width = '100%';
-                    canvas.style.height = '100%';
-                    canvas.style.objectFit = 'cover';
 
                     // Render PDF page to canvas
                     await page.render({
