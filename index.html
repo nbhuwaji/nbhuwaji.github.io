@@ -79,20 +79,24 @@
         }
 
         #flipbook {
-            width: 1400px;
-            height: 700px;
+            width: 1800px;
+            height: 1050px;
             margin: 0 auto;
         }
 
         #flipbook .page {
-            width: 700px;
-            height: 700px;
+            width: 900px;
+            height: 1050px;
             background: white;
             display: flex;
             align-items: center;
             justify-content: center;
             box-shadow: 0 0 20px rgba(0,0,0,0.5);
             overflow: hidden;
+        }
+
+        #flipbook .page canvas {
+            display: block;
         }
 
         #flipbook .page canvas {
@@ -164,47 +168,69 @@
         }
 
         /* Responsive Design */
-        @media (max-width: 1500px) {
+        @media (max-width: 1850px) {
+            #flipbook {
+                width: 1600px;
+                height: 933px;
+            }
+            #flipbook .page {
+                width: 800px;
+                height: 933px;
+            }
+        }
+
+        @media (max-width: 1650px) {
+            #flipbook {
+                width: 1400px;
+                height: 816px;
+            }
+            #flipbook .page {
+                width: 700px;
+                height: 816px;
+            }
+        }
+
+        @media (max-width: 1450px) {
             #flipbook {
                 width: 1200px;
-                height: 600px;
+                height: 700px;
             }
             #flipbook .page {
                 width: 600px;
-                height: 600px;
+                height: 700px;
             }
         }
 
         @media (max-width: 1250px) {
             #flipbook {
                 width: 1000px;
-                height: 500px;
+                height: 583px;
             }
             #flipbook .page {
                 width: 500px;
-                height: 500px;
+                height: 583px;
             }
         }
 
         @media (max-width: 1050px) {
             #flipbook {
                 width: 800px;
-                height: 400px;
+                height: 466px;
             }
             #flipbook .page {
                 width: 400px;
-                height: 400px;
+                height: 466px;
             }
         }
 
         @media (max-width: 850px) {
             #flipbook {
                 width: 600px;
-                height: 300px;
+                height: 350px;
             }
             #flipbook .page {
                 width: 300px;
-                height: 300px;
+                height: 350px;
             }
             .control-btn {
                 padding: 12px 25px;
@@ -215,11 +241,11 @@
         @media (max-width: 650px) {
             #flipbook {
                 width: 400px;
-                height: 200px;
+                height: 233px;
             }
             #flipbook .page {
                 width: 200px;
-                height: 200px;
+                height: 233px;
             }
             .header h1 {
                 font-size: 1.8em;
@@ -328,8 +354,16 @@
                 try {
                     const page = await pdfDoc.getPage(pageNum);
                     
-                    // Calculate scale to fit the page
-                    const viewport = page.getViewport({ scale: 2.0 });
+                    // Calculate scale to perfectly fit the page dimensions (9x10.5)
+                    const desiredWidth = 900;
+                    const desiredHeight = 1050;
+                    
+                    const viewport = page.getViewport({ scale: 1.0 });
+                    const scaleX = desiredWidth / viewport.width;
+                    const scaleY = desiredHeight / viewport.height;
+                    const scale = Math.max(scaleX, scaleY); // Use max to fill the space
+                    
+                    const scaledViewport = page.getViewport({ scale: scale });
 
                     // Create page div
                     const pageDiv = document.createElement('div');
@@ -339,13 +373,16 @@
                     const canvas = document.createElement('canvas');
                     const context = canvas.getContext('2d');
 
-                    canvas.width = viewport.width;
-                    canvas.height = viewport.height;
+                    canvas.width = scaledViewport.width;
+                    canvas.height = scaledViewport.height;
+                    canvas.style.width = '100%';
+                    canvas.style.height = '100%';
+                    canvas.style.objectFit = 'cover';
 
                     // Render PDF page to canvas
                     await page.render({
                         canvasContext: context,
-                        viewport: viewport
+                        viewport: scaledViewport
                     }).promise;
 
                     pageDiv.appendChild(canvas);
@@ -363,16 +400,17 @@
         async function initializeFlipbook() {
             const flipbook = $('#flipbook');
             
-            // Initialize turn.js
+            // Initialize turn.js with 9:10.5 ratio (aspect ratio 6:7)
             flipbook.turn({
-                width: 1400,
-                height: 700,
+                width: 1800,
+                height: 1050,
                 autoCenter: true,
                 elevation: 50,
                 gradients: true,
                 acceleration: true,
                 duration: 1200,
                 display: 'double', // This creates the 2-page spread like Issuu
+                page: 1,
                 when: {
                     turned: function(event, page) {
                         updatePageInfo(page);
