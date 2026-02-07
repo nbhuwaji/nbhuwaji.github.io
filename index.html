@@ -4,7 +4,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Neeta Bhuwaji - Portfolio</title>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/turn.js/3/turn.min.js"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -133,6 +132,17 @@
             height: 840px;
             background: white;
             box-shadow: 0 0 30px rgba(0,0,0,0.7);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+        }
+
+        #flipbook .page img {
+            max-width: 100%;
+            max-height: 100%;
+            object-fit: contain;
+            display: block;
         }
 
         .controls {
@@ -292,54 +302,74 @@
     <button class="fullscreen-btn" id="fullscreen-btn">Fullscreen</button>
 
     <script>
-        pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
+        // Configuration - Update this array with your page image filenames
+        const PAGES = [
+            'pages/pages_01.jpg',
+            'pages/pages_02.jpg',
+            'pages/pages_03.jpg',
+            'pages/pages_04.jpg',
+            'pages/pages_05.jpg',
+            'pages/pages_06.jpg',
+            'pages/pages_07.jpg',
+            'pages/pages_08.jpg',
+            'pages/pages_09.jpg',
+            'pages/pages_10.jpg',
+            'pages/pages_11.jpg',
+            'pages/pages_12.jpg',
+            'pages/pages_13.jpg',
+            'pages/pages_14.jpg',
+            'pages/pages_15.jpg',
+            'pages/pages_16.jpg',
+            'pages/pages_17.jpg',
+            'pages/pages_18.jpg',
+            'pages/pages_19.jpg',
+            'pages/pages_20.jpg',
+            'pages/pages_21.jpg',
+            'pages/pages_22.jpg',
+            'pages/pages_23.jpg',
+            'pages/pages_24.jpg',
+            'pages/pages_25.jpg',
+            'pages/pages_26.jpg',
+            'pages/pages_27.jpg',
+            'pages/pages_28.jpg'
+        ];
 
-        const PDF_FILE = 'issuu_portfolio_01.pdf';
-        let pdfDoc = null;
-        let totalPages = 0;
+        const totalPages = PAGES.length;
+        let loadedImages = 0;
 
-        window.addEventListener('load', loadPDF);
+        window.addEventListener('load', loadPortfolio);
 
-        async function loadPDF() {
-            try {
-                document.getElementById('progress-text').textContent = 'Loading PDF...';
-                
-                pdfDoc = await pdfjsLib.getDocument(PDF_FILE).promise;
-                totalPages = pdfDoc.numPages;
-                
-                await renderPages();
-                initFlipbook();
-                
-                document.getElementById('loading-screen').style.display = 'none';
-                document.getElementById('flipbook-wrapper').style.display = 'flex';
-            } catch (error) {
-                document.getElementById('progress-text').textContent = 'Error: ' + error.message;
-            }
-        }
-
-        async function renderPages() {
+        function loadPortfolio() {
             const flipbook = document.getElementById('flipbook');
-            flipbook.innerHTML = '';
+            const progressText = document.getElementById('progress-text');
             
-            for (let i = 1; i <= totalPages; i++) {
-                document.getElementById('progress-text').textContent = `Rendering ${i}/${totalPages}...`;
-                
-                const page = await pdfDoc.getPage(i);
-                const scale = 2.0;
-                const viewport = page.getViewport({ scale });
-                
+            // Create all page divs with images
+            PAGES.forEach((imagePath, index) => {
                 const pageDiv = document.createElement('div');
-                const canvas = document.createElement('canvas');
-                const ctx = canvas.getContext('2d');
+                pageDiv.className = 'page';
                 
-                canvas.width = viewport.width;
-                canvas.height = viewport.height;
+                const img = new Image();
+                img.onload = function() {
+                    loadedImages++;
+                    progressText.textContent = `Loading ${loadedImages} of ${totalPages} pages...`;
+                    
+                    // When all images are loaded, initialize the flipbook
+                    if (loadedImages === totalPages) {
+                        initFlipbook();
+                    }
+                };
+                img.onerror = function() {
+                    console.error(`Failed to load image: ${imagePath}`);
+                    loadedImages++;
+                    if (loadedImages === totalPages) {
+                        initFlipbook();
+                    }
+                };
+                img.src = imagePath;
                 
-                await page.render({ canvasContext: ctx, viewport }).promise;
-                
-                pageDiv.appendChild(canvas);
+                pageDiv.appendChild(img);
                 flipbook.appendChild(pageDiv);
-            }
+            });
         }
 
         function initFlipbook() {
@@ -355,6 +385,10 @@
             }).bind('turned', function(e, page) {
                 updatePage(page);
             });
+            
+            // Hide loading and show flipbook
+            document.getElementById('loading-screen').style.display = 'none';
+            document.getElementById('flipbook-wrapper').style.display = 'flex';
             
             updatePage(1);
         }
