@@ -24,7 +24,7 @@
             display: flex;
             margin: 0;
             padding: 0;
-            overflow-x: hidden;
+            overflow: hidden;
         }
 
         /* Sidebar */
@@ -39,7 +39,7 @@
             flex-direction: column;
             justify-content: space-between;
             padding: 40px 30px;
-            z-index: 1000;
+            z-index: 100;
         }
 
         .sidebar-top h1 {
@@ -57,11 +57,6 @@
             line-height: 1.6;
         }
 
-        .sidebar-bottom a {
-            color: #000;
-            text-decoration: none;
-        }
-
         /* Year Display */
         .year-display {
             position: fixed;
@@ -70,68 +65,21 @@
             font-size: 32px;
             font-weight: 700;
             color: #000;
-            z-index: 999;
+            z-index: 100;
         }
 
-        /* Main Content Area */
+        /* Main Content */
         .main-content {
             margin-left: 280px;
             width: calc(100% - 280px);
-            min-height: 100vh;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            padding: 60px 40px;
-            position: relative;
-        }
-
-        /* Flipbook Container */
-        .flipbook-container {
-            display: none;
-            position: relative;
-            perspective: 2000px;
-            width: 100%;
-            max-width: 1600px;
-            margin: 0 auto;
-        }
-
-        #flipbook-wrapper {
-            margin: 0 auto;
-            position: relative;
+            height: 100vh;
             display: flex;
             align-items: center;
             justify-content: center;
+            position: relative;
         }
 
-        #flipbook {
-            width: 1440px;
-            height: 840px;
-            margin: 0 auto;
-        }
-
-        #flipbook .page {
-            width: 720px;
-            height: 840px;
-            background: white;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            box-shadow: 0 0 30px rgba(0,0,0,0.7);
-            overflow: hidden;
-        }
-
-        #flipbook .page canvas {
-            display: block;
-            width: 100% !important;
-            height: 100% !important;
-            object-fit: contain;
-        }
-
-        /* Hide any text overlays on canvas */
-        #flipbook .page * {
-            pointer-events: none;
-        }
+        /* Loading Screen */
         .loading-screen {
             text-align: center;
             color: #333;
@@ -167,51 +115,32 @@
             color: #666;
         }
 
-        /* Loading Screen */
-        .loading-screen {
-            text-align: center;
-            color: #333;
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-        }
-
-        #flipbook-wrapper {
-            margin: 0 auto;
-            position: relative;
+        /* Flipbook */
+        .flipbook-wrapper {
+            display: none;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
         }
 
         #flipbook {
             width: 1440px;
             height: 840px;
-            margin: 0 auto;
         }
 
         #flipbook .page {
             width: 720px;
             height: 840px;
             background: white;
-            display: flex;
-            align-items: center;
-            justify-content: center;
             box-shadow: 0 0 30px rgba(0,0,0,0.7);
-            overflow: hidden;
         }
 
-        #flipbook .page canvas {
-            display: block;
-        }
-
-        /* Controls */
         .controls {
             display: flex;
             justify-content: center;
             align-items: center;
             gap: 30px;
             margin-top: 40px;
-            position: relative;
-            z-index: 10;
         }
 
         .control-btn {
@@ -267,7 +196,7 @@
             font-family: 'Roboto', sans-serif;
             letter-spacing: 1px;
             transition: all 0.3s;
-            z-index: 999;
+            z-index: 100;
             text-transform: uppercase;
             font-weight: 500;
         }
@@ -277,56 +206,23 @@
             color: #fff;
         }
 
-        /* Responsive Design */
+        /* Responsive */
         @media (max-width: 1500px) {
-            #flipbook {
-                width: 1200px;
-                height: 700px;
-            }
-            #flipbook .page {
-                width: 600px;
-                height: 700px;
-            }
-            .main-content {
-                padding: 40px 30px;
-            }
+            #flipbook { width: 1200px; height: 700px; }
+            #flipbook .page { width: 600px; height: 700px; }
         }
 
         @media (max-width: 1250px) {
-            #flipbook {
-                width: 1000px;
-                height: 583px;
-            }
-            #flipbook .page {
-                width: 500px;
-                height: 583px;
-            }
-            .sidebar {
-                width: 220px;
-                padding: 30px 20px;
-            }
-            .main-content {
-                margin-left: 220px;
-                width: calc(100% - 220px);
-                padding: 40px 20px;
-            }
-            .sidebar-top h1 {
-                font-size: 24px;
-            }
+            #flipbook { width: 1000px; height: 583px; }
+            #flipbook .page { width: 500px; height: 583px; }
+            .sidebar { width: 220px; padding: 30px 20px; }
+            .main-content { margin-left: 220px; width: calc(100% - 220px); }
+            .sidebar-top h1 { font-size: 24px; }
         }
 
         @media (max-width: 1050px) {
-            #flipbook {
-                width: 800px;
-                height: 466px;
-            }
-            #flipbook .page {
-                width: 400px;
-                height: 466px;
-            }
-            .main-content {
-                padding: 30px 20px;
-            }
+            #flipbook { width: 800px; height: 466px; }
+            #flipbook .page { width: 400px; height: 466px; }
         }
 
         @media (max-width: 900px) {
@@ -342,50 +238,19 @@
             .main-content {
                 margin-left: 0;
                 width: 100%;
-                padding: 20px;
-                min-height: calc(100vh - 80px);
+                height: calc(100vh - 80px);
             }
-            .year-display {
-                position: static;
-                margin-left: auto;
-            }
-            #flipbook {
-                width: 600px;
-                height: 350px;
-            }
-            #flipbook .page {
-                width: 300px;
-                height: 350px;
-            }
-            .control-btn {
-                padding: 10px 20px;
-                font-size: 11px;
-            }
+            .year-display { position: static; margin-left: auto; }
+            #flipbook { width: 600px; height: 350px; }
+            #flipbook .page { width: 300px; height: 350px; }
         }
 
         @media (max-width: 650px) {
-            #flipbook {
-                width: 400px;
-                height: 233px;
-            }
-            #flipbook .page {
-                width: 200px;
-                height: 233px;
-            }
-            .sidebar-top h1 {
-                font-size: 20px;
-            }
-            .sidebar-bottom {
-                font-size: 11px;
-            }
-            .year-display {
-                font-size: 24px;
-            }
-        }
-
-        /* Hide default turn.js page numbers */
-        .turn-page {
-            background: white;
+            #flipbook { width: 400px; height: 233px; }
+            #flipbook .page { width: 200px; height: 233px; }
+            .sidebar-top h1 { font-size: 20px; }
+            .sidebar-bottom { font-size: 11px; }
+            .year-display { font-size: 24px; }
         }
     </style>
 </head>
@@ -400,610 +265,138 @@
         </div>
     </div>
 
-    <!-- Year Display -->
+    <!-- Year -->
     <div class="year-display">2026</div>
 
     <!-- Main Content -->
     <div class="main-content">
-        <button class="fullscreen-btn" onclick="toggleFullscreen()" id="fullscreen-btn">
-            Fullscreen
-        </button>
-
+        <!-- Loading -->
         <div class="loading-screen" id="loading-screen">
-            <h2>LOADING PORTFOLIO</h2>
+            <h2>Loading Portfolio...</h2>
             <div class="spinner"></div>
             <div class="progress-text" id="progress-text">Preparing pages...</div>
         </div>
 
-        <div class="flipbook-container" id="flipbook-container">
-            <div id="flipbook-wrapper">
-                <div id="flipbook"></div>
-            </div>
+        <!-- Flipbook -->
+        <div class="flipbook-wrapper" id="flipbook-wrapper">
+            <div id="flipbook"></div>
             <div class="controls">
-                <button class="control-btn" id="prev-btn" onclick="previousPage()">
-                    ← Previous
-                </button>
-                <div class="page-info" id="page-info">
-                    Pages 1-2 of 10
-                </div>
-                <button class="control-btn" id="next-btn" onclick="nextPage()">
-                    Next →
-                </button>
+                <button class="control-btn" id="prev-btn">← Previous</button>
+                <div class="page-info" id="page-info">Pages 1-2</div>
+                <button class="control-btn" id="next-btn">Next →</button>
             </div>
         </div>
     </div>
 
+    <!-- Fullscreen -->
+    <button class="fullscreen-btn" id="fullscreen-btn">Fullscreen</button>
+
     <script>
-        // Configure PDF.js worker
         pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
 
+        const PDF_FILE = 'issuu_portfolio_01.pdf';
         let pdfDoc = null;
         let totalPages = 0;
-        let currentPage = 0;
 
-        // IMPORTANT: Replace 'issuu_portfolio_01.pdf' with your actual PDF filename
-        const PDF_FILE = 'issuu_portfolio_01.pdf';
-
-        // Load PDF on page load
-        window.addEventListener('load', async function() {
-            try {
-                await loadPDF();
-            } catch (error) {
-                console.error('Error loading PDF:', error);
-                document.getElementById('progress-text').textContent = 'Error loading PDF. Please check the file path.';
-            }
-        });
+        window.addEventListener('load', loadPDF);
 
         async function loadPDF() {
-            const progressText = document.getElementById('progress-text');
-            
             try {
-                progressText.textContent = 'Loading PDF file...';
+                document.getElementById('progress-text').textContent = 'Loading PDF...';
                 
-                // Load the PDF
-                const loadingTask = pdfjsLib.getDocument(PDF_FILE);
-                pdfDoc = await loadingTask.promise;
+                pdfDoc = await pdfjsLib.getDocument(PDF_FILE).promise;
                 totalPages = pdfDoc.numPages;
                 
-                console.log('PDF loaded successfully. Total pages:', totalPages);
-                progressText.textContent = `Rendering ${totalPages} pages...`;
-
-                // Render all pages
-                await renderAllPages();
-
-                // Initialize flipbook
-                progressText.textContent = 'Initializing flipbook...';
-                await initializeFlipbook();
-
-                // Hide loading screen and show flipbook
-                setTimeout(() => {
-                    document.getElementById('loading-screen').style.display = 'none';
-                    document.getElementById('flipbook-container').style.display = 'block';
-                }, 500);
-
+                await renderPages();
+                initFlipbook();
+                
+                document.getElementById('loading-screen').style.display = 'none';
+                document.getElementById('flipbook-wrapper').style.display = 'flex';
             } catch (error) {
-                console.error('Error in loadPDF:', error);
-                progressText.textContent = `Error: ${error.message}. Make sure '${PDF_FILE}' is in the same folder as this HTML file.`;
+                document.getElementById('progress-text').textContent = 'Error: ' + error.message;
             }
         }
 
-        async function renderAllPages() {
+        async function renderPages() {
             const flipbook = document.getElementById('flipbook');
             flipbook.innerHTML = '';
-
-            const progressText = document.getElementById('progress-text');
-
-            for (let pageNum = 1; pageNum <= totalPages; pageNum++) {
-                try {
-                    const page = await pdfDoc.getPage(pageNum);
-                    
-                    // Calculate scale to perfectly fit the page dimensions (9x10.5) - slightly smaller
-                    const desiredWidth = 720;
-                    const desiredHeight = 840;
-                    
-                    const viewport = page.getViewport({ scale: 1.0 });
-                    const scaleX = desiredWidth / viewport.width;
-                    const scaleY = desiredHeight / viewport.height;
-                    const scale = Math.max(scaleX, scaleY);
-                    
-                    const scaledViewport = page.getViewport({ scale: scale });
-
-                    // Create page div
-                    const pageDiv = document.createElement('div');
-                    pageDiv.className = 'page';
-
-                    // Create canvas
-                    const canvas = document.createElement('canvas');
-                    const context = canvas.getContext('2d');
-
-                    canvas.width = scaledViewport.width;
-                    canvas.height = scaledViewport.height;
-
-                    // Render PDF page to canvas
-                    await page.render({
-                        canvasContext: context,
-                        viewport: scaledViewport
-                    }).promise;
-
-                    pageDiv.appendChild(canvas);
-                    flipbook.appendChild(pageDiv);
-
-                    progressText.textContent = `Rendering page ${pageNum} of ${totalPages}...`;
-                    console.log(`Rendered page ${pageNum}`);
-
-                } catch (error) {
-                    console.error(`Error rendering page ${pageNum}:`, error);
-                }
+            
+            for (let i = 1; i <= totalPages; i++) {
+                document.getElementById('progress-text').textContent = `Rendering ${i}/${totalPages}...`;
+                
+                const page = await pdfDoc.getPage(i);
+                const scale = 2.0;
+                const viewport = page.getViewport({ scale });
+                
+                const pageDiv = document.createElement('div');
+                const canvas = document.createElement('canvas');
+                const ctx = canvas.getContext('2d');
+                
+                canvas.width = viewport.width;
+                canvas.height = viewport.height;
+                
+                await page.render({ canvasContext: ctx, viewport }).promise;
+                
+                pageDiv.appendChild(canvas);
+                flipbook.appendChild(pageDiv);
             }
         }
 
-        async function initializeFlipbook() {
-            const flipbook = $('#flipbook');
-            
-            // Initialize turn.js with 9:10.5 ratio (aspect ratio 6:7) - smaller size
-            flipbook.turn({
+        function initFlipbook() {
+            $('#flipbook').turn({
                 width: 1440,
                 height: 840,
                 autoCenter: true,
-                elevation: 50,
-                gradients: true,
-                acceleration: true,
-                duration: 1200,
                 display: 'double',
-                page: 1,
-                when: {
-                    turned: function(event, page) {
-                        updatePageInfo(page);
-                    }
-                }
-            });
-
-            updatePageInfo(1);
-            console.log('Flipbook initialized');
-        }
-
-        function updatePageInfo(page) {
-            currentPage = page;
-            const pageInfo = document.getElementById('page-info');
-            const prevBtn = document.getElementById('prev-btn');
-            const nextBtn = document.getElementById('next-btn');
-
-            // Calculate which pages are showing (2-page spread)
-            let leftPage = page;
-            let rightPage = page + 1;
-
-            if (page === 1) {
-                pageInfo.textContent = `Page ${page} of ${totalPages}`;
-            } else if (rightPage > totalPages) {
-                pageInfo.textContent = `Page ${leftPage} of ${totalPages}`;
-            } else {
-                pageInfo.textContent = `Pages ${leftPage}-${rightPage} of ${totalPages}`;
-            }
-
-            // Update button states
-            prevBtn.disabled = (page === 1);
-            nextBtn.disabled = (page >= totalPages);
-        }
-
-        function previousPage() {
-            $('#flipbook').turn('previous');
-        }
-
-        function nextPage() {
-            $('#flipbook').turn('next');
-        }
-
-        // Keyboard navigation
-        document.addEventListener('keydown', function(e) {
-            if (e.key === 'ArrowLeft') {
-                previousPage();
-            } else if (e.key === 'ArrowRight') {
-                nextPage();
-            }
-        });
-
-        // Fullscreen toggle
-        function toggleFullscreen() {
-            if (!document.fullscreenElement) {
-                document.documentElement.requestFullscreen();
-                document.getElementById('fullscreen-btn').textContent = 'Exit Fullscreen';
-            } else {
-                document.exitFullscreen();
-                document.getElementById('fullscreen-btn').textContent = 'Fullscreen';
-            }
-        }
-
-        // Handle fullscreen change
-        document.addEventListener('fullscreenchange', function() {
-            const btn = document.getElementById('fullscreen-btn');
-            if (!document.fullscreenElement) {
-                btn.textContent = 'Fullscreen';
-            }
-        });
-    </script>
-</body>
-</html>
-
-        #flipbook .page canvas {
-            max-width: 100%;
-            max-height: 100%;
-            object-fit: contain;
-        }
-
-        .controls {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            gap: 30px;
-            margin-top: 40px;
-        }
-
-        .control-btn {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-            padding: 15px 35px;
-            border: none;
-            border-radius: 50px;
-            cursor: pointer;
-            font-size: 16px;
-            font-weight: bold;
-            transition: all 0.3s;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
-        }
-
-        .control-btn:hover:not(:disabled) {
-            transform: translateY(-2px);
-            box-shadow: 0 6px 20px rgba(0,0,0,0.3);
-        }
-
-        .control-btn:disabled {
-            opacity: 0.4;
-            cursor: not-allowed;
-        }
-
-        .page-info {
-            text-align: center;
-            color: white;
-            font-size: 20px;
-            font-weight: bold;
-            background: rgba(0,0,0,0.3);
-            padding: 12px 30px;
-            border-radius: 30px;
-            backdrop-filter: blur(10px);
-        }
-
-        .fullscreen-btn {
-            position: fixed;
-            top: 20px;
-            right: 20px;
-            background: rgba(255,255,255,0.2);
-            color: white;
-            border: 2px solid white;
-            padding: 10px 20px;
-            border-radius: 8px;
-            cursor: pointer;
-            font-size: 14px;
-            backdrop-filter: blur(10px);
-            transition: all 0.3s;
-            z-index: 1000;
-        }
-
-        .fullscreen-btn:hover {
-            background: rgba(255,255,255,0.3);
-        }
-
-        /* Responsive Design */
-        @media (max-width: 1850px) {
-            #flipbook {
-                width: 1600px;
-                height: 933px;
-            }
-            #flipbook .page {
-                width: 800px;
-                height: 933px;
-            }
-        }
-
-        @media (max-width: 1650px) {
-            #flipbook {
-                width: 1400px;
-                height: 816px;
-            }
-            #flipbook .page {
-                width: 700px;
-                height: 816px;
-            }
-        }
-
-        @media (max-width: 1450px) {
-            #flipbook {
-                width: 1200px;
-                height: 700px;
-            }
-            #flipbook .page {
-                width: 600px;
-                height: 700px;
-            }
-        }
-
-        @media (max-width: 1250px) {
-            #flipbook {
-                width: 1000px;
-                height: 583px;
-            }
-            #flipbook .page {
-                width: 500px;
-                height: 583px;
-            }
-        }
-
-        @media (max-width: 1050px) {
-            #flipbook {
-                width: 800px;
-                height: 466px;
-            }
-            #flipbook .page {
-                width: 400px;
-                height: 466px;
-            }
-        }
-
-        @media (max-width: 850px) {
-            #flipbook {
-                width: 600px;
-                height: 350px;
-            }
-            #flipbook .page {
-                width: 300px;
-                height: 350px;
-            }
-            .control-btn {
-                padding: 12px 25px;
-                font-size: 14px;
-            }
-        }
-
-        @media (max-width: 650px) {
-            #flipbook {
-                width: 400px;
-                height: 233px;
-            }
-            #flipbook .page {
-                width: 200px;
-                height: 233px;
-            }
-            .header h1 {
-                font-size: 1.8em;
-            }
-        }
-
-        /* Hide default turn.js page numbers */
-        .turn-page {
-            background: white;
-        }
-    </style>
-</head>
-<body>
-    <button class="fullscreen-btn" onclick="toggleFullscreen()" id="fullscreen-btn">
-        ⛶ Fullscreen
-    </button>
-
-    <div class="header">
-        <h1>📖 Portfolio</h1>
-    </div>
-
-    <div class="loading-screen" id="loading-screen">
-        <h2>Loading Portfolio...</h2>
-        <div class="spinner"></div>
-        <div class="progress-text" id="progress-text">Preparing pages...</div>
-    </div>
-
-    <div class="flipbook-container" id="flipbook-container">
-        <div id="flipbook-wrapper">
-            <div id="flipbook"></div>
-        </div>
-        <div class="controls">
-            <button class="control-btn" id="prev-btn" onclick="previousPage()">
-                ← Previous
-            </button>
-            <div class="page-info" id="page-info">
-                Pages 1-2 of 10
-            </div>
-            <button class="control-btn" id="next-btn" onclick="nextPage()">
-                Next →
-            </button>
-        </div>
-    </div>
-
-    <script>
-        // Configure PDF.js worker
-        pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
-
-        let pdfDoc = null;
-        let totalPages = 0;
-        let currentPage = 0;
-
-        // IMPORTANT: Replace 'issuu_portfolio_01.pdf' with your actual PDF filename
-        const PDF_FILE = 'issuu_portfolio_01.pdf';
-
-        // Load PDF on page load
-        window.addEventListener('load', async function() {
-            try {
-                await loadPDF();
-            } catch (error) {
-                console.error('Error loading PDF:', error);
-                document.getElementById('progress-text').textContent = 'Error loading PDF. Please check the file path.';
-            }
-        });
-
-        async function loadPDF() {
-            const progressText = document.getElementById('progress-text');
-            
-            try {
-                progressText.textContent = 'Loading PDF file...';
-                
-                // Load the PDF
-                const loadingTask = pdfjsLib.getDocument(PDF_FILE);
-                pdfDoc = await loadingTask.promise;
-                totalPages = pdfDoc.numPages;
-                
-                console.log('PDF loaded successfully. Total pages:', totalPages);
-                progressText.textContent = `Rendering ${totalPages} pages...`;
-
-                // Render all pages
-                await renderAllPages();
-
-                // Initialize flipbook
-                progressText.textContent = 'Initializing flipbook...';
-                await initializeFlipbook();
-
-                // Hide loading screen and show flipbook
-                setTimeout(() => {
-                    document.getElementById('loading-screen').style.display = 'none';
-                    document.getElementById('flipbook-container').style.display = 'block';
-                }, 500);
-
-            } catch (error) {
-                console.error('Error in loadPDF:', error);
-                progressText.textContent = `Error: ${error.message}. Make sure '${PDF_FILE}' is in the same folder as this HTML file.`;
-            }
-        }
-
-        async function renderAllPages() {
-            const flipbook = document.getElementById('flipbook');
-            flipbook.innerHTML = '';
-
-            const progressText = document.getElementById('progress-text');
-
-            for (let pageNum = 1; pageNum <= totalPages; pageNum++) {
-                try {
-                    const page = await pdfDoc.getPage(pageNum);
-                    
-                    // Calculate scale to perfectly fit the page dimensions (9x10.5)
-                    const desiredWidth = 900;
-                    const desiredHeight = 1050;
-                    
-                    const viewport = page.getViewport({ scale: 1.0 });
-                    const scaleX = desiredWidth / viewport.width;
-                    const scaleY = desiredHeight / viewport.height;
-                    const scale = Math.max(scaleX, scaleY); // Use max to fill the space
-                    
-                    const scaledViewport = page.getViewport({ scale: scale });
-
-                    // Create page div
-                    const pageDiv = document.createElement('div');
-                    pageDiv.className = 'page';
-
-                    // Create canvas
-                    const canvas = document.createElement('canvas');
-                    const context = canvas.getContext('2d');
-
-                    canvas.width = scaledViewport.width;
-                    canvas.height = scaledViewport.height;
-                    canvas.style.width = '100%';
-                    canvas.style.height = '100%';
-                    canvas.style.objectFit = 'cover';
-
-                    // Render PDF page to canvas
-                    await page.render({
-                        canvasContext: context,
-                        viewport: scaledViewport
-                    }).promise;
-
-                    pageDiv.appendChild(canvas);
-                    flipbook.appendChild(pageDiv);
-
-                    progressText.textContent = `Rendering page ${pageNum} of ${totalPages}...`;
-                    console.log(`Rendered page ${pageNum}`);
-
-                } catch (error) {
-                    console.error(`Error rendering page ${pageNum}:`, error);
-                }
-            }
-        }
-
-        async function initializeFlipbook() {
-            const flipbook = $('#flipbook');
-            
-            // Initialize turn.js with 9:10.5 ratio (aspect ratio 6:7)
-            flipbook.turn({
-                width: 1800,
-                height: 1050,
-                autoCenter: true,
-                elevation: 50,
-                gradients: true,
                 acceleration: true,
-                duration: 1200,
-                display: 'double', // This creates the 2-page spread like Issuu
-                page: 1,
-                when: {
-                    turned: function(event, page) {
-                        updatePageInfo(page);
-                    }
-                }
+                gradients: true,
+                elevation: 50,
+                duration: 1200
+            }).bind('turned', function(e, page) {
+                updatePage(page);
             });
-
-            updatePageInfo(1);
-            console.log('Flipbook initialized');
+            
+            updatePage(1);
         }
 
-        function updatePageInfo(page) {
-            currentPage = page;
-            const pageInfo = document.getElementById('page-info');
-            const prevBtn = document.getElementById('prev-btn');
-            const nextBtn = document.getElementById('next-btn');
-
-            // Calculate which pages are showing (2-page spread)
-            let leftPage = page;
-            let rightPage = page + 1;
-
+        function updatePage(page) {
+            const info = document.getElementById('page-info');
+            const prev = document.getElementById('prev-btn');
+            const next = document.getElementById('next-btn');
+            
             if (page === 1) {
-                pageInfo.textContent = `Page ${page} of ${totalPages}`;
-            } else if (rightPage > totalPages) {
-                pageInfo.textContent = `Page ${leftPage} of ${totalPages}`;
+                info.textContent = `Page ${page}`;
+            } else if (page + 1 > totalPages) {
+                info.textContent = `Page ${page}`;
             } else {
-                pageInfo.textContent = `Pages ${leftPage}-${rightPage} of ${totalPages}`;
+                info.textContent = `Pages ${page}-${page + 1}`;
             }
-
-            // Update button states
-            prevBtn.disabled = (page === 1);
-            nextBtn.disabled = (page >= totalPages);
+            
+            prev.disabled = (page === 1);
+            next.disabled = (page >= totalPages);
         }
 
-        function previousPage() {
-            $('#flipbook').turn('previous');
-        }
+        document.getElementById('prev-btn').onclick = () => $('#flipbook').turn('previous');
+        document.getElementById('next-btn').onclick = () => $('#flipbook').turn('next');
 
-        function nextPage() {
-            $('#flipbook').turn('next');
-        }
-
-        // Keyboard navigation
-        document.addEventListener('keydown', function(e) {
-            if (e.key === 'ArrowLeft') {
-                previousPage();
-            } else if (e.key === 'ArrowRight') {
-                nextPage();
-            }
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'ArrowLeft') $('#flipbook').turn('previous');
+            if (e.key === 'ArrowRight') $('#flipbook').turn('next');
         });
 
-        // Fullscreen toggle
-        function toggleFullscreen() {
+        document.getElementById('fullscreen-btn').onclick = function() {
             if (!document.fullscreenElement) {
                 document.documentElement.requestFullscreen();
-                document.getElementById('fullscreen-btn').textContent = '✕ Exit Fullscreen';
+                this.textContent = 'Exit Fullscreen';
             } else {
                 document.exitFullscreen();
-                document.getElementById('fullscreen-btn').textContent = '⛶ Fullscreen';
+                this.textContent = 'Fullscreen';
             }
-        }
+        };
 
-        // Handle fullscreen change
-        document.addEventListener('fullscreenchange', function() {
+        document.addEventListener('fullscreenchange', () => {
             const btn = document.getElementById('fullscreen-btn');
-            if (!document.fullscreenElement) {
-                btn.textContent = '⛶ Fullscreen';
-            }
+            btn.textContent = document.fullscreenElement ? 'Exit Fullscreen' : 'Fullscreen';
         });
     </script>
 </body>
