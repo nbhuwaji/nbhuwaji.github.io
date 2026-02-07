@@ -23,7 +23,8 @@
             display: flex;
             margin: 0;
             padding: 0;
-            overflow: hidden;
+            overflow-x: hidden;
+            overflow-y: auto;
         }
 
         /* Sidebar */
@@ -76,6 +77,7 @@
             align-items: center;
             justify-content: center;
             position: relative;
+            padding: 20px;
         }
 
         /* Loading Screen */
@@ -120,16 +122,17 @@
             flex-direction: column;
             align-items: center;
             justify-content: center;
+            max-height: calc(100vh - 160px);
         }
 
         #flipbook {
-            width: 1440px;
-            height: 840px;
+            width: 1200px;
+            height: 700px;
         }
 
         #flipbook .page {
-            width: 720px;
-            height: 840px;
+            width: 600px;
+            height: 700px;
             background: white;
             box-shadow: 0 0 30px rgba(0,0,0,0.7);
             display: flex;
@@ -150,7 +153,7 @@
             justify-content: center;
             align-items: center;
             gap: 30px;
-            margin-top: 40px;
+            margin-top: 30px;
         }
 
         .control-btn {
@@ -218,13 +221,13 @@
 
         /* Responsive */
         @media (max-width: 1500px) {
-            #flipbook { width: 1200px; height: 700px; }
-            #flipbook .page { width: 600px; height: 700px; }
+            #flipbook { width: 1000px; height: 583px; }
+            #flipbook .page { width: 500px; height: 583px; }
         }
 
         @media (max-width: 1250px) {
-            #flipbook { width: 1000px; height: 583px; }
-            #flipbook .page { width: 500px; height: 583px; }
+            #flipbook { width: 900px; height: 525px; }
+            #flipbook .page { width: 450px; height: 525px; }
             .sidebar { width: 220px; padding: 30px 20px; }
             .main-content { margin-left: 220px; width: calc(100% - 220px); }
             .sidebar-top h1 { font-size: 24px; }
@@ -262,6 +265,7 @@
             .sidebar-bottom { font-size: 11px; }
             .year-display { font-size: 24px; }
         }
+
     </style>
 </head>
 <body>
@@ -271,7 +275,7 @@
             <h1>Neeta Bhuwaji</h1>
         </div>
         <div class="sidebar-bottom">
-            kbhuwajic@gmail.com | +520-7198954
+            <a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="d1bab3b9a4a6b0bbb8b291b6bcb0b8bdffb2bebc">[email&#160;protected]</a> | +520-7198954
         </div>
     </div>
 
@@ -301,7 +305,7 @@
     <!-- Fullscreen -->
     <button class="fullscreen-btn" id="fullscreen-btn">Fullscreen</button>
 
-    <script>
+    <script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
         // Configuration - Update this array with your page image filenames
         const PAGES = [
             'pages/pages_01.jpg',
@@ -374,8 +378,8 @@
 
         function initFlipbook() {
             $('#flipbook').turn({
-                width: 1440,
-                height: 840,
+                width: 1200,
+                height: 700,
                 autoCenter: true,
                 display: 'double',
                 acceleration: true,
@@ -428,10 +432,4 @@
             }
         };
 
-        document.addEventListener('fullscreenchange', () => {
-            const btn = document.getElementById('fullscreen-btn');
-            btn.textContent = document.fullscreenElement ? 'Exit Fullscreen' : 'Fullscreen';
-        });
-    </script>
-</body>
-</html>
+        document.addEventListener(
