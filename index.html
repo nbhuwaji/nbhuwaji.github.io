@@ -27,7 +27,6 @@
             overflow-y: auto;
         }
 
-        /* Sidebar */
         .sidebar {
             width: 280px;
             background: #f9c896;
@@ -57,7 +56,6 @@
             line-height: 1.6;
         }
 
-        /* Year Display */
         .year-display {
             position: fixed;
             top: 40px;
@@ -68,7 +66,6 @@
             z-index: 100;
         }
 
-        /* Main Content */
         .main-content {
             margin-left: 280px;
             width: calc(100% - 280px);
@@ -80,7 +77,6 @@
             padding: 20px;
         }
 
-        /* Loading Screen */
         .loading-screen {
             text-align: center;
             color: #333;
@@ -116,7 +112,6 @@
             color: #666;
         }
 
-        /* Flipbook */
         .flipbook-wrapper {
             display: none;
             flex-direction: column;
@@ -219,7 +214,6 @@
             color: #fff;
         }
 
-        /* Responsive */
         @media (max-width: 1500px) {
             #flipbook { width: 1000px; height: 583px; }
             #flipbook .page { width: 500px; height: 583px; }
@@ -265,33 +259,27 @@
             .sidebar-bottom { font-size: 11px; }
             .year-display { font-size: 24px; }
         }
-
     </style>
 </head>
 <body>
-    <!-- Sidebar -->
     <div class="sidebar">
         <div class="sidebar-top">
             <h1>Neeta Bhuwaji</h1>
         </div>
         <div class="sidebar-bottom">
-            <a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="d1bab3b9a4a6b0bbb8b291b6bcb0b8bdffb2bebc">[email&#160;protected]</a> | +520-7198954
+            kbhuwajic@gmail.com | +520-7198954
         </div>
     </div>
 
-    <!-- Year -->
     <div class="year-display">2026</div>
 
-    <!-- Main Content -->
     <div class="main-content">
-        <!-- Loading -->
         <div class="loading-screen" id="loading-screen">
             <h2>Loading Portfolio...</h2>
             <div class="spinner"></div>
-            <div class="progress-text" id="progress-text">Preparing pages...</div>
+            <div class="progress-text" id="progress-text">Initializing...</div>
         </div>
 
-        <!-- Flipbook -->
         <div class="flipbook-wrapper" id="flipbook-wrapper">
             <div id="flipbook"></div>
             <div class="controls">
@@ -302,99 +290,70 @@
         </div>
     </div>
 
-    <!-- Fullscreen -->
     <button class="fullscreen-btn" id="fullscreen-btn">Fullscreen</button>
 
-    <script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
-        // Configuration - Update this array with your page image filenames
-        const PAGES = [
-            'pages/pages_01.jpg',
-            'pages/pages_02.jpg',
-            'pages/pages_03.jpg',
-            'pages/pages_04.jpg',
-            'pages/pages_05.jpg',
-            'pages/pages_06.jpg',
-            'pages/pages_07.jpg',
-            'pages/pages_08.jpg',
-            'pages/pages_09.jpg',
-            'pages/pages_10.jpg',
-            'pages/pages_11.jpg',
-            'pages/pages_12.jpg',
-            'pages/pages_13.jpg',
-            'pages/pages_14.jpg',
-            'pages/pages_15.jpg',
-            'pages/pages_16.jpg',
-            'pages/pages_17.jpg',
-            'pages/pages_18.jpg',
-            'pages/pages_19.jpg',
-            'pages/pages_20.jpg',
-            'pages/pages_21.jpg',
-            'pages/pages_22.jpg',
-            'pages/pages_23.jpg',
-            'pages/pages_24.jpg',
-            'pages/pages_25.jpg',
-            'pages/pages_26.jpg',
-            'pages/pages_27.jpg',
-            'pages/pages_28.jpg'
-        ];
+    <script>
+        // Total number of pages - UPDATE THIS to match your actual page count
+        const TOTAL_PAGES = 28;
+        
+        window.addEventListener('load', function() {
+            console.log('Starting portfolio load...');
+            setTimeout(initPortfolio, 100);
+        });
 
-        const totalPages = PAGES.length;
-        let loadedImages = 0;
-
-        window.addEventListener('load', loadPortfolio);
-
-        function loadPortfolio() {
+        function initPortfolio() {
             const flipbook = document.getElementById('flipbook');
             const progressText = document.getElementById('progress-text');
             
-            // Create all page divs with images
-            PAGES.forEach((imagePath, index) => {
+            console.log('Creating pages...');
+            progressText.textContent = 'Creating pages...';
+            
+            // Create all pages immediately
+            for (let i = 1; i <= TOTAL_PAGES; i++) {
                 const pageDiv = document.createElement('div');
                 pageDiv.className = 'page';
                 
-                const img = new Image();
-                img.onload = function() {
-                    loadedImages++;
-                    progressText.textContent = `Loading ${loadedImages} of ${totalPages} pages...`;
-                    
-                    // When all images are loaded, initialize the flipbook
-                    if (loadedImages === totalPages) {
-                        initFlipbook();
-                    }
-                };
+                const img = document.createElement('img');
+                const pageNum = String(i).padStart(2, '0');
+                img.src = `pages/pages_${pageNum}.jpg`;
+                img.alt = `Page ${i}`;
+                
                 img.onerror = function() {
-                    console.error(`Failed to load image: ${imagePath}`);
-                    loadedImages++;
-                    if (loadedImages === totalPages) {
-                        initFlipbook();
-                    }
+                    console.error(`Failed to load: pages/pages_${pageNum}.jpg`);
+                    this.style.display = 'none';
                 };
-                img.src = imagePath;
+                
+                img.onload = function() {
+                    console.log(`Loaded page ${i}`);
+                };
                 
                 pageDiv.appendChild(img);
                 flipbook.appendChild(pageDiv);
-            });
-        }
-
-        function initFlipbook() {
-            $('#flipbook').turn({
-                width: 1200,
-                height: 700,
-                autoCenter: true,
-                display: 'double',
-                acceleration: true,
-                gradients: true,
-                elevation: 50,
-                duration: 1200
-            }).bind('turned', function(e, page) {
-                updatePage(page);
-            });
+            }
             
-            // Hide loading and show flipbook
-            document.getElementById('loading-screen').style.display = 'none';
-            document.getElementById('flipbook-wrapper').style.display = 'flex';
+            // Initialize flipbook immediately (don't wait for images)
+            console.log('Initializing flipbook...');
+            progressText.textContent = 'Starting flipbook...';
             
-            updatePage(1);
+            setTimeout(function() {
+                $('#flipbook').turn({
+                    width: 1200,
+                    height: 700,
+                    autoCenter: true,
+                    display: 'double',
+                    acceleration: true,
+                    gradients: true,
+                    elevation: 50,
+                    duration: 1200
+                }).bind('turned', function(e, page) {
+                    updatePage(page);
+                });
+                
+                console.log('Flipbook ready!');
+                document.getElementById('loading-screen').style.display = 'none';
+                document.getElementById('flipbook-wrapper').style.display = 'flex';
+                updatePage(1);
+            }, 500);
         }
 
         function updatePage(page) {
@@ -404,14 +363,14 @@
             
             if (page === 1) {
                 info.textContent = `Page ${page}`;
-            } else if (page + 1 > totalPages) {
+            } else if (page + 1 > TOTAL_PAGES) {
                 info.textContent = `Page ${page}`;
             } else {
                 info.textContent = `Pages ${page}-${page + 1}`;
             }
             
             prev.disabled = (page === 1);
-            next.disabled = (page >= totalPages);
+            next.disabled = (page >= TOTAL_PAGES);
         }
 
         document.getElementById('prev-btn').onclick = () => $('#flipbook').turn('previous');
@@ -432,4 +391,10 @@
             }
         };
 
-        document.addEventListener(
+        document.addEventListener('fullscreenchange', () => {
+            const btn = document.getElementById('fullscreen-btn');
+            btn.textContent = document.fullscreenElement ? 'Exit Fullscreen' : 'Fullscreen';
+        });
+    </script>
+</body>
+</html>
