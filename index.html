@@ -10,17 +10,13 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
     <style>
-        :root{
+        :root {
             --accent: #2f7dd1;
             --icon-color: #1a1a1a;
             --icon-hover-bg: #f0f0f0;
             --toolbar-bg: #ffffff;
         }
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
 
         body {
             font-family: 'Roboto', sans-serif;
@@ -33,6 +29,7 @@
         button { font-family: inherit; }
         .icon { width: 18px; height: 18px; stroke: currentColor; stroke-width: 2; fill: none; stroke-linecap: round; stroke-linejoin: round; display: block; }
 
+        /* ===== SIDEBAR ===== */
         .sidebar {
             width: 12vw;
             min-width: 160px;
@@ -40,8 +37,7 @@
             background: #f9c896;
             height: 100vh;
             position: fixed;
-            left: 0;
-            top: 0;
+            left: 0; top: 0;
             display: flex;
             flex-direction: column;
             justify-content: space-between;
@@ -49,7 +45,6 @@
             z-index: 100;
             transition: transform 0.3s ease;
         }
-
         :fullscreen .sidebar { transform: translateX(-100%); }
 
         .sidebar-top h1 {
@@ -58,15 +53,34 @@
             color: #000;
             line-height: 1.1;
             letter-spacing: -0.5px;
+            margin-bottom: 0.75rem;
         }
 
-        .sidebar-bottom {
-            font-size: clamp(10px, 0.75vw, 12px);
+        .sidebar-summary {
+            font-size: clamp(9px, 0.72vw, 11px);
             color: #000;
-            line-height: 1.4;
+            line-height: 1.5;
+            margin-bottom: 1rem;
+            font-weight: 400;
+        }
+
+    
+        .sidebar-bottom {
+            font-size: clamp(9px, 0.72vw, 11px);
+            color: #000;
+            line-height: 1.6;
             word-break: break-word;
         }
+        .sidebar-bottom .contact-label {
+            font-weight: 700;
+            font-size: clamp(9px, 0.72vw, 11px);
+            letter-spacing: 0.04em;
+            text-transform: uppercase;
+            margin-bottom: 0.3rem;
+            display: block;
+        }
 
+        /* ===== MAIN AREA ===== */
         .main-content {
             margin-left: clamp(160px, 12vw, 220px);
             width: calc(100% - clamp(160px, 12vw, 220px));
@@ -75,12 +89,11 @@
             align-items: center;
             justify-content: center;
             position: relative;
-            padding: 10px;
+            /* extra bottom padding so toolbar never overlaps the flipbook */
+            padding: 10px 10px 90px 10px;
             transition: margin 0.3s ease, width 0.3s ease;
-            /* FIX 5: allow scroll when zoomed in */
             overflow: auto;
         }
-
         :fullscreen .main-content { margin-left: 0; width: 100%; }
 
         .flipbook-wrapper {
@@ -97,7 +110,6 @@
             align-items: center;
             justify-content: center;
             transition: transform 0.2s ease;
-            /* FIX 5: anchor zoom to top so toolbar stays clear */
             transform-origin: center top;
         }
 
@@ -105,18 +117,16 @@
         #flipbook .page { background: white; display: flex; align-items: center; justify-content: center; }
         #flipbook .page img { max-width: 100%; max-height: 100%; object-fit: contain; }
 
+        /* ===== CLOSE BUTTONS ===== */
         .close-box {
             position: fixed;
             top: 1.4vw;
             left: calc(clamp(160px, 12vw, 220px) + 1.4vw);
-            width: 30px;
-            height: 30px;
+            width: 30px; height: 30px;
             background: #ececec;
             border: none;
             border-radius: 6px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
+            display: flex; align-items: center; justify-content: center;
             color: #555;
             cursor: pointer;
             z-index: 105;
@@ -126,112 +136,116 @@
 
         .close-plain {
             position: fixed;
-            top: 1.6vw;
-            right: 1.6vw;
-            width: 28px;
-            height: 28px;
+            top: 1.6vw; right: 1.6vw;
+            width: 28px; height: 28px;
             background: transparent;
             border: none;
-            display: flex;
-            align-items: center;
-            justify-content: center;
+            display: flex; align-items: center; justify-content: center;
             color: #000;
             cursor: pointer;
             z-index: 105;
         }
         .close-plain:hover { opacity: 0.6; }
-
         :fullscreen .close-box, :fullscreen .close-plain { display: none; }
 
+        /* ===== NAV ARROWS — narrowed hit zone to prevent cursor overlap ===== */
         .nav-arrow {
             position: fixed;
-            top: 0;
-            height: 100vh;
-            width: 64px;
+            top: 50%;
+            transform: translateY(-50%);
+            /* reduced from full-height to a compact button */
+            width: 40px;
+            height: 64px;
             border: none;
-            background: transparent;
+            background: rgba(255,255,255,0.75);
+            backdrop-filter: blur(4px);
+            border-radius: 8px;
             color: #444;
             cursor: pointer;
-            display: flex;
-            align-items: center;
-            justify-content: center;
+            display: flex; align-items: center; justify-content: center;
             z-index: 90;
-            transition: color 0.15s ease, opacity 0.15s ease;
+            transition: background 0.15s ease, color 0.15s ease, opacity 0.15s ease;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
         }
-        .nav-arrow .icon { width: 26px; height: 26px; stroke-width: 1.6; }
-        .nav-arrow:hover { color: #000; }
-        .nav-arrow:disabled { opacity: 0.25; cursor: default; }
-        .nav-arrow.prev { left: clamp(160px, 12vw, 220px); }
-        .nav-arrow.next { right: 0; }
-        :fullscreen .nav-arrow.prev { left: 0; }
+        .nav-arrow .icon { width: 22px; height: 22px; stroke-width: 1.8; }
+        .nav-arrow:hover { background: #fff; color: #000; }
+        .nav-arrow:disabled { opacity: 0.2; cursor: default; }
+        /* sit just inside the edge of the flipbook area, not over the page */
+        .nav-arrow.prev { left: calc(clamp(160px, 12vw, 220px) + 8px); }
+        .nav-arrow.next { right: 8px; }
+        :fullscreen .nav-arrow.prev { left: 8px; }
 
+        /* ===== BOTTOM TOOLBAR — page input only, no extra prev/next ===== */
         .bottom-toolbar {
             position: fixed;
-            bottom: 2vw;
+            bottom: 20px;
             left: 50%;
             transform: translateX(-50%);
             background: var(--toolbar-bg);
             border-radius: 24px;
-            box-shadow: 0 4px 18px rgba(0,0,0,0.2);
+            box-shadow: 0 4px 18px rgba(0,0,0,0.18);
             display: flex;
             align-items: center;
-            padding: 6px 8px;
+            padding: 6px 10px;
             gap: 2px;
             z-index: 101;
         }
+
         .tb-btn {
             border: none;
             background: transparent;
-            width: 36px;
-            height: 36px;
+            width: 36px; height: 36px;
             border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
+            display: flex; align-items: center; justify-content: center;
             cursor: pointer;
             color: var(--icon-color);
             transition: background 0.15s ease;
-            position: relative;
         }
         .tb-btn:hover:not(:disabled) { background: var(--icon-hover-bg); }
         .tb-btn:disabled { opacity: 0.3; cursor: default; }
-        .tb-btn.tb-active { color: var(--accent); background: #eaf2fc; }
 
+        /* Page number display — plain text, click to edit */
         .page-pill {
             display: flex;
             align-items: center;
-            gap: 4px;
-            font-size: 12px;
-            font-weight: 600;
+            gap: 5px;
+            font-size: 13px;
+            font-weight: 500;
             color: var(--icon-color);
-            padding: 0 8px;
+            padding: 0 6px;
             white-space: nowrap;
         }
         .page-pill input {
-            width: 28px;
+            width: 32px;
             border: none;
             border-bottom: 1.5px solid #ccc;
             text-align: center;
-            font-size: 12px;
+            font-size: 13px;
             font-weight: 600;
             font-family: inherit;
             color: var(--icon-color);
             background: transparent;
+            /* use text type for reliable cursor behaviour */
+            -moz-appearance: textfield;
         }
+        .page-pill input::-webkit-outer-spin-button,
+        .page-pill input::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
         .page-pill input:focus { outline: none; border-bottom-color: var(--accent); }
-        .page-pill .total { color: #888; }
+        .page-pill .total { color: #888; font-weight: 400; }
 
         .tb-divider { width: 1px; height: 22px; background: #e2e2e2; margin: 0 4px; }
 
+        /* ===== MOBILE ===== */
         @media (max-width: 900px) {
             body { flex-direction: column; overflow-y: auto; }
             .sidebar { width: 100%; max-width: 100%; height: auto; position: relative; flex-direction: row; padding: 15px; }
-            .main-content { margin-left: 0; width: 100%; height: auto; min-height: 80vh; }
-            .nav-arrow { width: 40px; }
-            .nav-arrow.prev { left: 0; }
+            .main-content { margin-left: 0; width: 100%; height: auto; min-height: 80vh; padding-bottom: 80px; }
+            .nav-arrow { width: 36px; height: 52px; }
+            .nav-arrow.prev { left: 4px; }
+            .nav-arrow.next { right: 4px; }
             .close-box { left: 12px; top: 12px; }
             .close-plain { top: 12px; right: 12px; }
-            .bottom-toolbar { padding: 5px 4px; bottom: 10px; }
+            .bottom-toolbar { padding: 5px 6px; bottom: 10px; }
             .tb-btn { width: 32px; height: 32px; }
         }
     </style>
@@ -241,10 +255,14 @@
     <div class="sidebar">
         <div class="sidebar-top">
             <h1>Neeta Bhuwaji</h1>
+            <p class="sidebar-summary">Interior Designer exploring how sustainability, wellbeing, and research shape the future of the built environment.</p>
+            
+                <svg viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+            </a>
         </div>
         <div class="sidebar-bottom">
+            <span class="contact-label">Contact</span>
             kbhuwajic@gmail.com<br>
-            <!-- FIX 7: phone number rendered via JS to avoid bot scraping -->
             <span id="phone"></span>
         </div>
     </div>
@@ -264,12 +282,11 @@
     </button>
 
     <div class="main-content">
-        <div class="loading-screen" id="loading-screen" style="text-align: center;">
-            <div style="border: 3px solid rgba(0,0,0,0.1); border-top: 3px solid #000; border-radius: 50%; width: 40px; height: 40px; animation: spin 1s linear infinite; margin: 0 auto 15px;"></div>
-            <style>@keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }</style>
-            <div style="font-size: 12px; letter-spacing: 1px;">LOADING...</div>
+        <div class="loading-screen" id="loading-screen" style="text-align:center;">
+            <div style="border:3px solid rgba(0,0,0,0.1);border-top:3px solid #000;border-radius:50%;width:40px;height:40px;animation:spin 1s linear infinite;margin:0 auto 15px;"></div>
+            <style>@keyframes spin{0%{transform:rotate(0deg)}100%{transform:rotate(360deg)}}</style>
+            <div style="font-size:12px;letter-spacing:1px;">LOADING...</div>
         </div>
-
         <div class="flipbook-wrapper" id="flipbook-wrapper">
             <div class="zoom-wrapper" id="zoom-wrapper">
                 <div id="flipbook"></div>
@@ -277,22 +294,14 @@
         </div>
     </div>
 
-    <!-- BOTTOM TOOLBAR -->
+    <!-- BOTTOM TOOLBAR: removed inner prev/next buttons; page input + zoom + fullscreen only -->
     <div class="bottom-toolbar">
-        <button class="tb-btn" id="tb-prev" title="Previous">
-            <svg class="icon" viewBox="0 0 24 24"><path d="M15 18l-6-6 6-6"/></svg>
-        </button>
 
         <div class="page-pill">
-            <!-- FIX 2: added max attribute so browser validation hints work -->
-            <input type="number" id="page-input" min="1" max="36" value="1">
+            <input type="number" id="page-input" min="1" max="36" value="1" inputmode="numeric">
             <span>/</span>
             <span class="total" id="total-pages">36</span>
         </div>
-
-        <button class="tb-btn" id="tb-next" title="Next">
-            <svg class="icon" viewBox="0 0 24 24"><path d="M9 18l6-6-6-6"/></svg>
-        </button>
 
         <div class="tb-divider"></div>
 
@@ -317,7 +326,7 @@
 
         document.getElementById('total-pages').textContent = TOTAL_PAGES;
 
-        // FIX 7: render phone number via JS to deter bot scraping
+        // Phone rendered via JS to deter scraping
         document.getElementById('phone').textContent = ['+520', '7198954'].join('-');
 
         function pageSrc(i) {
@@ -332,13 +341,10 @@
         function calculateSize() {
             let availableWidth = window.innerWidth - sidebarWidth();
             let availableHeight = window.innerHeight;
-
-            if (window.innerWidth > 900) availableWidth -= 120;
-            availableHeight -= 130;
-
+            if (window.innerWidth > 900) availableWidth -= 100;
+            availableHeight -= 110; // account for toolbar + padding
             let width = Math.min(availableWidth * 0.92, 1400);
             let height = width * ASPECT_RATIO;
-
             if (height > availableHeight) {
                 height = availableHeight;
                 width = height / ASPECT_RATIO;
@@ -352,19 +358,12 @@
             }
         }
 
-        // FIX 4: in double-page mode turn.js reports the left page number,
-        // so the last spread fires "turned" with page 35, not 36.
-        // Disable "next" once we reach TOTAL_PAGES - 1.
         function updatePage(page) {
             document.getElementById('page-input').value = page;
-
             const atStart = page <= 1;
             const atEnd = page >= TOTAL_PAGES - 1;
-
-            ['prev-arrow', 'tb-prev'].forEach(id =>
-                document.getElementById(id).disabled = atStart);
-            ['next-arrow', 'tb-next'].forEach(id =>
-                document.getElementById(id).disabled = atEnd);
+            document.getElementById('prev-arrow').disabled = atStart;
+            document.getElementById('next-arrow').disabled = atEnd;
         }
 
         function applyZoom() {
@@ -412,25 +411,19 @@
 
         window.addEventListener('load', initPortfolio);
 
-        // FIX 6: debounce resize handler to prevent excessive reflows
         let resizeTimer;
         window.addEventListener('resize', () => {
             clearTimeout(resizeTimer);
             resizeTimer = setTimeout(handleResize, 150);
         });
 
-        // prev / next
+        // Side nav arrows only — no toolbar prev/next buttons
         document.getElementById('prev-arrow').onclick = () => $('#flipbook').turn('previous');
         document.getElementById('next-arrow').onclick = () => $('#flipbook').turn('next');
-        document.getElementById('tb-prev').onclick = () => $('#flipbook').turn('previous');
-        document.getElementById('tb-next').onclick = () => $('#flipbook').turn('next');
 
+        // Page number input — plain number input, change/blur to commit
         const pageInput = document.getElementById('page-input');
 
-        // Keyboard navigation removed intentionally.
-
-        // FIX 2: write the clamped value back to the input immediately so
-        // the field self-corrects rather than showing an out-of-range number.
         function commitPageInput() {
             let n = parseInt(pageInput.value, 10);
             if (isNaN(n)) { pageInput.value = 1; return; }
@@ -441,11 +434,17 @@
         pageInput.addEventListener('change', commitPageInput);
         pageInput.addEventListener('blur', commitPageInput);
 
-        // zoom
-        document.getElementById('tb-zoom-in').onclick = () => { zoomLevel = Math.min(zoomLevel + 0.15, 2); applyZoom(); };
-        document.getElementById('tb-zoom-out').onclick = () => { zoomLevel = Math.max(zoomLevel - 0.15, 0.5); applyZoom(); };
+        // Zoom
+        document.getElementById('tb-zoom-in').onclick = () => {
+            zoomLevel = Math.min(zoomLevel + 0.15, 2);
+            applyZoom();
+        };
+        document.getElementById('tb-zoom-out').onclick = () => {
+            zoomLevel = Math.max(zoomLevel - 0.15, 0.5);
+            applyZoom();
+        };
 
-        // fullscreen
+        // Fullscreen
         document.getElementById('tb-fullscreen').onclick = function() {
             if (!document.fullscreenElement) {
                 document.documentElement.requestFullscreen();
@@ -455,8 +454,7 @@
         };
         document.addEventListener('fullscreenchange', () => setTimeout(handleResize, 150));
 
-        // FIX 3: close buttons were a no-op outside fullscreen.
-        // Now falls back to history.back() in normal mode.
+        // Close buttons
         function handleClose() {
             if (document.fullscreenElement) {
                 document.exitFullscreen();
