@@ -10,6 +10,12 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
     <style>
+        :root{
+            --accent: #2f7dd1;
+            --icon-color: #1a1a1a;
+            --icon-hover-bg: #f0f0f0;
+            --toolbar-bg: #ffffff;
+        }
         * {
             margin: 0;
             padding: 0;
@@ -24,11 +30,13 @@
             overflow: hidden;
         }
 
-        /* COMPACT SIDEBAR */
+        button { font-family: inherit; }
+        .icon { width: 18px; height: 18px; stroke: currentColor; stroke-width: 2; fill: none; stroke-linecap: round; stroke-linejoin: round; display: block; }
+
         .sidebar {
-            width: 12vw; /* Reduced from 18vw */
-            min-width: 160px; /* Reduced from 200px */
-            max-width: 220px; /* Reduced from 280px */
+            width: 12vw;
+            min-width: 160px;
+            max-width: 220px;
             background: #f9c896;
             height: 100vh;
             position: fixed;
@@ -42,13 +50,10 @@
             transition: transform 0.3s ease;
         }
 
-        :fullscreen .sidebar {
-            transform: translateX(-100%);
-        }
+        :fullscreen .sidebar { transform: translateX(-100%); }
 
-        /* SMALLER FONTS */
         .sidebar-top h1 {
-            font-size: clamp(16px, 1.4vw, 22px); /* Reduced size */
+            font-size: clamp(16px, 1.4vw, 22px);
             font-weight: 700;
             color: #000;
             line-height: 1.1;
@@ -56,23 +61,12 @@
         }
 
         .sidebar-bottom {
-            font-size: clamp(10px, 0.75vw, 12px); /* Reduced size */
+            font-size: clamp(10px, 0.75vw, 12px);
             color: #000;
             line-height: 1.4;
             word-break: break-word;
         }
 
-        .year-display {
-            position: fixed;
-            top: 2vw;
-            right: 2vw;
-            font-size: clamp(20px, 1.8vw, 28px);
-            font-weight: 700;
-            color: #000;
-            z-index: 100;
-        }
-
-        /* LARGER MAIN AREA */
         .main-content {
             margin-left: clamp(160px, 12vw, 220px);
             width: calc(100% - clamp(160px, 12vw, 220px));
@@ -81,14 +75,13 @@
             align-items: center;
             justify-content: center;
             position: relative;
-            padding: 10px; /* Tighter padding for larger book */
+            padding: 10px;
             transition: margin 0.3s ease, width 0.3s ease;
+            /* FIX 5: allow scroll when zoomed in */
+            overflow: auto;
         }
 
-        :fullscreen .main-content {
-            margin-left: 0;
-            width: 100%;
-        }
+        :fullscreen .main-content { margin-left: 0; width: 100%; }
 
         .flipbook-wrapper {
             display: none;
@@ -99,77 +92,147 @@
             height: 100%;
         }
 
-        #flipbook {
-            margin: 0 auto;
-            box-shadow: 0 0 40px rgba(0,0,0,0.15);
-        }
-
-        #flipbook .page {
-            background: white;
+        .zoom-wrapper {
             display: flex;
             align-items: center;
             justify-content: center;
+            transition: transform 0.2s ease;
+            /* FIX 5: anchor zoom to top so toolbar stays clear */
+            transform-origin: center top;
         }
 
-        #flipbook .page img {
-            max-width: 100%;
-            max-height: 100%;
-            object-fit: contain;
-        }
+        #flipbook { margin: 0 auto; box-shadow: 0 0 40px rgba(0,0,0,0.15); }
+        #flipbook .page { background: white; display: flex; align-items: center; justify-content: center; }
+        #flipbook .page img { max-width: 100%; max-height: 100%; object-fit: contain; }
 
-        /* CONTROLS */
-        .controls {
+        .close-box {
+            position: fixed;
+            top: 1.4vw;
+            left: calc(clamp(160px, 12vw, 220px) + 1.4vw);
+            width: 30px;
+            height: 30px;
+            background: #ececec;
+            border: none;
+            border-radius: 6px;
             display: flex;
-            justify-content: center;
             align-items: center;
-            gap: 15px;
-            margin-top: 20px; /* Reduced margin to keep book large */
-            z-index: 101;
-        }
-
-        .control-btn {
-            background: #fff;
-            color: #000;
-            padding: 8px 20px;
-            border: 1.5px solid #000;
+            justify-content: center;
+            color: #555;
             cursor: pointer;
-            font-weight: 700;
-            text-transform: uppercase;
-            font-size: 10px;
-            letter-spacing: 0.5px;
+            z-index: 105;
+            transition: background 0.15s ease;
         }
+        .close-box:hover { background: #ddd; }
 
-        .control-btn:hover:not(:disabled) {
-            background: #000;
-            color: #fff;
+        .close-plain {
+            position: fixed;
+            top: 1.6vw;
+            right: 1.6vw;
+            width: 28px;
+            height: 28px;
+            background: transparent;
+            border: none;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #000;
+            cursor: pointer;
+            z-index: 105;
         }
+        .close-plain:hover { opacity: 0.6; }
 
-        .page-info {
-            font-size: 11px;
-            background: #fff;
-            padding: 6px 15px;
-            border: 1.5px solid #000;
+        :fullscreen .close-box, :fullscreen .close-plain { display: none; }
+
+        .nav-arrow {
+            position: fixed;
+            top: 0;
+            height: 100vh;
+            width: 64px;
+            border: none;
+            background: transparent;
+            color: #444;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 90;
+            transition: color 0.15s ease, opacity 0.15s ease;
         }
+        .nav-arrow .icon { width: 26px; height: 26px; stroke-width: 1.6; }
+        .nav-arrow:hover { color: #000; }
+        .nav-arrow:disabled { opacity: 0.25; cursor: default; }
+        .nav-arrow.prev { left: clamp(160px, 12vw, 220px); }
+        .nav-arrow.next { right: 0; }
+        :fullscreen .nav-arrow.prev { left: 0; }
 
-        .fullscreen-btn {
+        .bottom-toolbar {
             position: fixed;
             bottom: 2vw;
-            right: 2vw;
-            background: #fff;
-            border: 1.5px solid #000;
-            padding: 8px 12px;
-            cursor: pointer;
-            z-index: 110;
-            text-transform: uppercase;
-            font-weight: 700;
-            font-size: 10px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: var(--toolbar-bg);
+            border-radius: 24px;
+            box-shadow: 0 4px 18px rgba(0,0,0,0.2);
+            display: flex;
+            align-items: center;
+            padding: 6px 8px;
+            gap: 2px;
+            z-index: 101;
         }
+        .tb-btn {
+            border: none;
+            background: transparent;
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            color: var(--icon-color);
+            transition: background 0.15s ease;
+            position: relative;
+        }
+        .tb-btn:hover:not(:disabled) { background: var(--icon-hover-bg); }
+        .tb-btn:disabled { opacity: 0.3; cursor: default; }
+        .tb-btn.tb-active { color: var(--accent); background: #eaf2fc; }
 
-        /* Mobile */
+        .page-pill {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            font-size: 12px;
+            font-weight: 600;
+            color: var(--icon-color);
+            padding: 0 8px;
+            white-space: nowrap;
+        }
+        .page-pill input {
+            width: 28px;
+            border: none;
+            border-bottom: 1.5px solid #ccc;
+            text-align: center;
+            font-size: 12px;
+            font-weight: 600;
+            font-family: inherit;
+            color: var(--icon-color);
+            background: transparent;
+        }
+        .page-pill input:focus { outline: none; border-bottom-color: var(--accent); }
+        .page-pill .total { color: #888; }
+
+        .tb-divider { width: 1px; height: 22px; background: #e2e2e2; margin: 0 4px; }
+
         @media (max-width: 900px) {
             body { flex-direction: column; overflow-y: auto; }
             .sidebar { width: 100%; max-width: 100%; height: auto; position: relative; flex-direction: row; padding: 15px; }
             .main-content { margin-left: 0; width: 100%; height: auto; min-height: 80vh; }
+            .nav-arrow { width: 40px; }
+            .nav-arrow.prev { left: 0; }
+            .close-box { left: 12px; top: 12px; }
+            .close-plain { top: 12px; right: 12px; }
+            .bottom-toolbar { padding: 5px 4px; bottom: 10px; }
+            .tb-btn { width: 32px; height: 32px; }
         }
     </style>
 </head>
@@ -180,11 +243,25 @@
             <h1>Neeta Bhuwaji</h1>
         </div>
         <div class="sidebar-bottom">
-            kbhuwajic@gmail.com <br>+520-7198954
+            kbhuwajic@gmail.com<br>
+            <!-- FIX 7: phone number rendered via JS to avoid bot scraping -->
+            <span id="phone"></span>
         </div>
     </div>
 
-    <div class="year-display">2026</div>
+    <button class="close-box" id="close-box" title="Close">
+        <svg class="icon" viewBox="0 0 24 24"><path d="M18 6L6 18M6 6l12 12"/></svg>
+    </button>
+    <button class="close-plain" id="close-plain" title="Close">
+        <svg class="icon" viewBox="0 0 24 24"><path d="M18 6L6 18M6 6l12 12"/></svg>
+    </button>
+
+    <button class="nav-arrow prev" id="prev-arrow" title="Previous page">
+        <svg class="icon" viewBox="0 0 24 24"><path d="M15 18l-6-6 6-6"/></svg>
+    </button>
+    <button class="nav-arrow next" id="next-arrow" title="Next page">
+        <svg class="icon" viewBox="0 0 24 24"><path d="M9 18l6-6-6-6"/></svg>
+    </button>
 
     <div class="main-content">
         <div class="loading-screen" id="loading-screen" style="text-align: center;">
@@ -194,47 +271,105 @@
         </div>
 
         <div class="flipbook-wrapper" id="flipbook-wrapper">
-            <div id="flipbook"></div>
-            <div class="controls">
-                <button class="control-btn" id="prev-btn">← PREV</button>
-                <div class="page-info" id="page-info">PAGE 1</div>
-                <button class="control-btn" id="next-btn">NEXT →</button>
+            <div class="zoom-wrapper" id="zoom-wrapper">
+                <div id="flipbook"></div>
             </div>
         </div>
     </div>
 
-    <button class="fullscreen-btn" id="fullscreen-btn">Fullscreen</button>
+    <!-- BOTTOM TOOLBAR -->
+    <div class="bottom-toolbar">
+        <button class="tb-btn" id="tb-prev" title="Previous">
+            <svg class="icon" viewBox="0 0 24 24"><path d="M15 18l-6-6 6-6"/></svg>
+        </button>
+
+        <div class="page-pill">
+            <!-- FIX 2: added max attribute so browser validation hints work -->
+            <input type="number" id="page-input" min="1" max="36" value="1">
+            <span>/</span>
+            <span class="total" id="total-pages">36</span>
+        </div>
+
+        <button class="tb-btn" id="tb-next" title="Next">
+            <svg class="icon" viewBox="0 0 24 24"><path d="M9 18l6-6-6-6"/></svg>
+        </button>
+
+        <div class="tb-divider"></div>
+
+        <button class="tb-btn" id="tb-zoom-in" title="Zoom in">
+            <svg class="icon" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/><line x1="11" y1="8" x2="11" y2="14"/><line x1="8" y1="11" x2="14" y2="11"/></svg>
+        </button>
+        <button class="tb-btn" id="tb-zoom-out" title="Zoom out">
+            <svg class="icon" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/><line x1="8" y1="11" x2="14" y2="11"/></svg>
+        </button>
+
+        <div class="tb-divider"></div>
+
+        <button class="tb-btn" id="tb-fullscreen" title="Fullscreen">
+            <svg class="icon" viewBox="0 0 24 24"><path d="M8 3H5a2 2 0 0 0-2 2v3"/><path d="M21 8V5a2 2 0 0 0-2-2h-3"/><path d="M3 16v3a2 2 0 0 0 2 2h3"/><path d="M16 21h3a2 2 0 0 0 2-2v-3"/></svg>
+        </button>
+    </div>
 
     <script>
         const TOTAL_PAGES = 36;
-        const ASPECT_RATIO = 0.583; 
+        const ASPECT_RATIO = 0.583;
+        let zoomLevel = 1;
+
+        document.getElementById('total-pages').textContent = TOTAL_PAGES;
+
+        // FIX 7: render phone number via JS to deter bot scraping
+        document.getElementById('phone').textContent = ['+520', '7198954'].join('-');
+
+        function pageSrc(i) {
+            return `pages/pages_${String(i).padStart(2, '0')}.jpg`;
+        }
+
+        function sidebarWidth() {
+            if (window.innerWidth <= 900) return 0;
+            return Math.max(160, Math.min(window.innerWidth * 0.12, 220));
+        }
 
         function calculateSize() {
-            let availableWidth = window.innerWidth;
+            let availableWidth = window.innerWidth - sidebarWidth();
             let availableHeight = window.innerHeight;
 
-            // Subtract sidebar if visible
-            if (!document.fullscreenElement && window.innerWidth > 900) {
-                const sidebarWidth = Math.max(160, Math.min(window.innerWidth * 0.12, 220));
-                availableWidth -= sidebarWidth;
-            }
+            if (window.innerWidth > 900) availableWidth -= 120;
+            availableHeight -= 130;
 
-            // INCREASED SIZE: Using 90% width instead of 80%
-            let width = Math.min(availableWidth * 0.9, 1400); 
+            let width = Math.min(availableWidth * 0.92, 1400);
             let height = width * ASPECT_RATIO;
 
-            // Keep controls visible
-            const maxHeight = availableHeight - 120; 
-            
-            if (height > maxHeight) {
-                height = maxHeight;
+            if (height > availableHeight) {
+                height = availableHeight;
                 width = height / ASPECT_RATIO;
             }
-
             return { width, height };
         }
 
-        window.addEventListener('load', initPortfolio);
+        function goToPage(page) {
+            if ($('#flipbook').turn('is')) {
+                $('#flipbook').turn('page', page);
+            }
+        }
+
+        // FIX 4: in double-page mode turn.js reports the left page number,
+        // so the last spread fires "turned" with page 35, not 36.
+        // Disable "next" once we reach TOTAL_PAGES - 1.
+        function updatePage(page) {
+            document.getElementById('page-input').value = page;
+
+            const atStart = page <= 1;
+            const atEnd = page >= TOTAL_PAGES - 1;
+
+            ['prev-arrow', 'tb-prev'].forEach(id =>
+                document.getElementById(id).disabled = atStart);
+            ['next-arrow', 'tb-next'].forEach(id =>
+                document.getElementById(id).disabled = atEnd);
+        }
+
+        function applyZoom() {
+            document.getElementById('zoom-wrapper').style.transform = `scale(${zoomLevel})`;
+        }
 
         function initPortfolio() {
             const flipbook = document.getElementById('flipbook');
@@ -242,11 +377,11 @@
                 const pageDiv = document.createElement('div');
                 pageDiv.className = 'page';
                 const img = document.createElement('img');
-                img.src = `pages/pages_${String(i).padStart(2, '0')}.jpg`;
+                img.src = pageSrc(i);
                 pageDiv.appendChild(img);
                 flipbook.appendChild(pageDiv);
             }
-            
+
             const size = calculateSize();
 
             setTimeout(function() {
@@ -261,21 +396,11 @@
                 }).bind('turned', function(e, page) {
                     updatePage(page);
                 });
-                
+
                 document.getElementById('loading-screen').style.display = 'none';
                 document.getElementById('flipbook-wrapper').style.display = 'flex';
                 updatePage(1);
             }, 500);
-        }
-
-        function updatePage(page) {
-            const info = document.getElementById('page-info');
-            if (page === 1) info.textContent = `PAGE ${page}`;
-            else if (page >= TOTAL_PAGES) info.textContent = `PAGE ${TOTAL_PAGES}`;
-            else info.textContent = `PAGES ${page}-${page + 1}`;
-            
-            document.getElementById('prev-btn').disabled = (page === 1);
-            document.getElementById('next-btn').disabled = (page >= TOTAL_PAGES);
         }
 
         function handleResize() {
@@ -285,28 +410,62 @@
             }
         }
 
-        window.addEventListener('resize', handleResize);
-        document.addEventListener('fullscreenchange', () => {
-            const btn = document.getElementById('fullscreen-btn');
-            btn.textContent = document.fullscreenElement ? 'Exit Fullscreen' : 'Fullscreen';
-            setTimeout(handleResize, 150);
+        window.addEventListener('load', initPortfolio);
+
+        // FIX 6: debounce resize handler to prevent excessive reflows
+        let resizeTimer;
+        window.addEventListener('resize', () => {
+            clearTimeout(resizeTimer);
+            resizeTimer = setTimeout(handleResize, 150);
         });
 
-        document.getElementById('prev-btn').onclick = () => $('#flipbook').turn('previous');
-        document.getElementById('next-btn').onclick = () => $('#flipbook').turn('next');
+        // prev / next
+        document.getElementById('prev-arrow').onclick = () => $('#flipbook').turn('previous');
+        document.getElementById('next-arrow').onclick = () => $('#flipbook').turn('next');
+        document.getElementById('tb-prev').onclick = () => $('#flipbook').turn('previous');
+        document.getElementById('tb-next').onclick = () => $('#flipbook').turn('next');
 
-        document.addEventListener('keydown', (e) => {
-            if (e.key === 'ArrowLeft') $('#flipbook').turn('previous');
-            if (e.key === 'ArrowRight') $('#flipbook').turn('next');
-        });
+        const pageInput = document.getElementById('page-input');
 
-        document.getElementById('fullscreen-btn').onclick = function() {
+        // Keyboard navigation removed intentionally.
+
+        // FIX 2: write the clamped value back to the input immediately so
+        // the field self-corrects rather than showing an out-of-range number.
+        function commitPageInput() {
+            let n = parseInt(pageInput.value, 10);
+            if (isNaN(n)) { pageInput.value = 1; return; }
+            n = Math.max(1, Math.min(TOTAL_PAGES, n));
+            pageInput.value = n;
+            goToPage(n);
+        }
+        pageInput.addEventListener('change', commitPageInput);
+        pageInput.addEventListener('blur', commitPageInput);
+
+        // zoom
+        document.getElementById('tb-zoom-in').onclick = () => { zoomLevel = Math.min(zoomLevel + 0.15, 2); applyZoom(); };
+        document.getElementById('tb-zoom-out').onclick = () => { zoomLevel = Math.max(zoomLevel - 0.15, 0.5); applyZoom(); };
+
+        // fullscreen
+        document.getElementById('tb-fullscreen').onclick = function() {
             if (!document.fullscreenElement) {
                 document.documentElement.requestFullscreen();
             } else {
                 document.exitFullscreen();
             }
         };
+        document.addEventListener('fullscreenchange', () => setTimeout(handleResize, 150));
+
+        // FIX 3: close buttons were a no-op outside fullscreen.
+        // Now falls back to history.back() in normal mode.
+        function handleClose() {
+            if (document.fullscreenElement) {
+                document.exitFullscreen();
+            } else {
+                window.history.back();
+            }
+        }
+        document.getElementById('close-box').onclick = handleClose;
+        document.getElementById('close-plain').onclick = handleClose;
     </script>
 </body>
 </html>
