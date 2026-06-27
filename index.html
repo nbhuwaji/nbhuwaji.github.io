@@ -64,7 +64,7 @@
             font-weight: 400;
         }
 
-    
+
         .sidebar-bottom {
             font-size: clamp(9px, 0.72vw, 11px);
             color: #000;
@@ -255,9 +255,7 @@
     <div class="sidebar">
         <div class="sidebar-top">
             <h1>Neeta Bhuwaji</h1>
-            <p class="sidebar-summary">Interior Designer exploring how sustainability, wellbeing, and research shape the future of the built environment. 
-                Interior Designer | Interior Architect
-                Workplace • Healthcare • Community Design</p>
+            <p class="sidebar-summary">Interior Designer exploring how sustainability, wellbeing, and research shape the future of the built environment.</p>
             
             </a>
         </div>
@@ -422,18 +420,32 @@
         document.getElementById('prev-arrow').onclick = () => $('#flipbook').turn('previous');
         document.getElementById('next-arrow').onclick = () => $('#flipbook').turn('next');
 
-        // Page number input — plain number input, change/blur to commit
+        // Page number input
         const pageInput = document.getElementById('page-input');
 
-        function commitPageInput() {
+        pageInput.addEventListener('focus', () => pageInput.select());
+
+        function jumpToPage() {
             let n = parseInt(pageInput.value, 10);
-            if (isNaN(n)) { pageInput.value = 1; return; }
-            n = Math.max(1, Math.min(TOTAL_PAGES, n));
+            if (isNaN(n) || n < 1) n = 1;
+            if (n > TOTAL_PAGES) n = TOTAL_PAGES;
             pageInput.value = n;
-            goToPage(n);
+            // turn.js double-page mode: use even page numbers for spreads
+            const jumpTo = (n > 1 && n % 2 !== 0) ? n - 1 : n;
+            $('#flipbook').turn('page', jumpTo);
         }
-        pageInput.addEventListener('change', commitPageInput);
-        pageInput.addEventListener('blur', commitPageInput);
+
+        // Enter key commits the jump — blur is NOT called here to avoid double-fire
+        pageInput.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter') {
+                e.preventDefault();
+                jumpToPage();
+                pageInput.blur();
+            }
+        });
+
+        // Clicking away also jumps — but only if value actually changed
+        pageInput.addEventListener('blur', jumpToPage);
 
         // Zoom
         document.getElementById('tb-zoom-in').onclick = () => {
