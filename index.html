@@ -117,36 +117,6 @@
         #flipbook .page { background: white; display: flex; align-items: center; justify-content: center; }
         #flipbook .page img { max-width: 100%; max-height: 100%; object-fit: contain; }
 
-        /* ===== CLOSE BUTTONS ===== */
-        .close-box {
-            position: fixed;
-            top: 1.4vw;
-            left: calc(clamp(160px, 12vw, 220px) + 1.4vw);
-            width: 30px; height: 30px;
-            background: #ececec;
-            border: none;
-            border-radius: 6px;
-            display: flex; align-items: center; justify-content: center;
-            color: #555;
-            cursor: pointer;
-            z-index: 105;
-            transition: background 0.15s ease;
-        }
-        .close-box:hover { background: #ddd; }
-
-        .close-plain {
-            position: fixed;
-            top: 1.6vw; right: 1.6vw;
-            width: 28px; height: 28px;
-            background: transparent;
-            border: none;
-            display: flex; align-items: center; justify-content: center;
-            color: #000;
-            cursor: pointer;
-            z-index: 105;
-        }
-        .close-plain:hover { opacity: 0.6; }
-        :fullscreen .close-box, :fullscreen .close-plain { display: none; }
 
         /* ===== NAV ARROWS — narrowed hit zone to prevent cursor overlap ===== */
         .nav-arrow {
